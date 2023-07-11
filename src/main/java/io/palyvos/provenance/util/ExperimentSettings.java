@@ -15,10 +15,18 @@ import io.palyvos.provenance.ananke.output.TimestampedFileProvenanceGraphEncoder
 import java.io.File;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
+import java.util.function.Function;
 import java.util.function.Supplier;
+
+import io.palyvos.provenance.l3stream.util.L3Settings;
+import io.palyvos.provenance.l3stream.wrappers.operators.L3OpWrapperStrategy;
+import io.palyvos.provenance.l3stream.wrappers.operators.LineageModeStrategy;
+import io.palyvos.provenance.l3stream.wrappers.operators.NonLineageModeStrategy;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+/* Modifications copyright (C) 2023 Masaya Yamada */
 
 public class ExperimentSettings implements Serializable {
 
@@ -364,5 +372,65 @@ public class ExperimentSettings implements Serializable {
         .append("syntheticProvenanceOverlap", syntheticProvenanceOverlap)
         .append("disableSinkChaining", disableSinkChaining)
         .toString();
+  }
+
+  // Modification start
+  @Parameter(names = "--lineageMode", required = true, converter = L3OpWrapperStrategyConverter.class)
+  transient private Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy> l3OpWrapperStrategy;
+
+  public Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy> l3OpWrapperStrategy() {
+    return l3OpWrapperStrategy;
+  }
+
+
+  public String getLineageMode() {
+    if (l3OpWrapperStrategy.apply(null).getClass() == NonLineageModeStrategy.class) {
+      return "NonLineageMode";
+    } else {
+      return "LineageMode";
+    }
+  }
+
+  private static class L3OpWrapperStrategyConverter
+          implements IStringConverter<Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy>> {
+
+    @Override
+    public Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy> convert(
+            String value) {
+      assert value == "Lineage" || value == "nonLineage";
+      switch (value) {
+        case "Lineage":
+          return (Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy>)
+                  LineageModeStrategy::new;
+        case "nonLineage":
+          return (Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy>)
+                  NonLineageModeStrategy::new;
+        default:
+          throw new IllegalArgumentException("Undefined lineage mode is provided.");
+      }
+    }
+  }
+
+  @Parameter(names = "--CpMServerIP", required = true)
+  private String cpMServerIP;
+
+  public String getCpMServerIP() {
+    return cpMServerIP;
+  }
+
+  @Parameter(names = "--CpMServerPort", required = true)
+  private int cpMServerPort;
+
+  public int getCpMServerPort() {
+    return cpMServerPort;
+  }
+
+  // latencyFlag = 0 -> Produce output value
+  // latencyFlag = 1 -> Produce latency as output
+  @Parameter(names = "--latencyFlag")
+  private int latencyFlag = 1;
+
+  public int getLatencyFlag() {
+    return latencyFlag;
   }
 }
