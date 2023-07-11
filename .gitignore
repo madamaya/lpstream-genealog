@@ -9,3 +9,4 @@ flink-1.9.1
 .idea
 scripts/odroids
 *.iml
+**.DS_STORE
