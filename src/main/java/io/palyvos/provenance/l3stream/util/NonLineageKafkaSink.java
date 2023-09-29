@@ -9,10 +9,12 @@ import java.util.Properties;
 
 public class NonLineageKafkaSink {
     public static FlinkKafkaProducer newInstance(String topic, Properties prop, ExperimentSettings settings) {
-        if (settings.getLatencyFlag() == 1) {
+        if (settings.getLatencyFlag() == 0) {
             return new FlinkKafkaProducer<>(topic, new NonLineageSerializerLat<>(topic), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
-        } else {
+        } else if (settings.getLatencyFlag() == 1) {
             return new FlinkKafkaProducer<>(topic, new NonLineageSerializer<>(topic), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
+        } else {
+            throw new IllegalArgumentException("NonLineageKafkaSink");
         }
     }
 }

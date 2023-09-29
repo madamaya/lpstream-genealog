@@ -10,13 +10,14 @@ import java.util.Properties;
 
 public class LineageKafkaSink {
     public static FlinkKafkaProducer newInstance(String topic, Properties prop, ExperimentSettings settings) {
-        if (settings.getLatencyFlag() == 1) {
-            return new FlinkKafkaProducer<>(topic, new LineageSerializerLin<>(topic, settings), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
-        }
-        if (settings.getLatencyFlag() == 2) {
+        if (settings.getLatencyFlag() == 0) {
             return new FlinkKafkaProducer<>(topic, new LineageSerializerLat<>(topic, settings), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
-        } else {
+        } else if (settings.getLatencyFlag() == 1) {
             return new FlinkKafkaProducer<>(topic, new LineageSerializer<>(topic, settings), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
+        } else if (settings.getLatencyFlag() == 2) {
+            return new FlinkKafkaProducer<>(topic, new LineageSerializerLin<>(topic, settings), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
+        } else {
+            throw new IllegalArgumentException("LineageKafkaSink");
         }
     }
 }

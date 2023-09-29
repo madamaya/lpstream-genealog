@@ -8,11 +8,14 @@ import java.util.Set;
 public class FormatLineage {
     public static String formattedLineage(Set<TimestampedUIDTuple> provenance) {
         StringBuffer sb = new StringBuffer();
-        sb.append("(").append(provenance.size()).append(") {\n");
         for (TimestampedUIDTuple t : provenance) {
-            sb.append(t).append("\n");
+            sb.append(t).append(",");
         }
-        sb.append("}");
+        if (sb.length() > 0) {
+            sb.delete(sb.length() - 1, sb.length());
+        } else {
+            // throw new IllegalStateException("sb.length() = " + sb.length());
+        }
         return sb.toString();
     }
 }

@@ -5,6 +5,7 @@ import io.palyvos.provenance.l3stream.util.L3Settings;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.l3stream.wrappers.operators.nonlineage.*;
 import io.palyvos.provenance.util.ExperimentSettings;
+import org.apache.flink.api.common.eventtime.TimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.*;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -48,6 +49,16 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
+    public <T> MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTs(TimestampAssigner<T> tsAssigner) {
+        return new NonLineageUpdateTsFunctionWM<>(tsAssigner);
+    }
+
+    @Override
+    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy) {
+        return new NonLineageUpdateTsFunctionWM2<>(watermarkStrategy);
+    }
+
+    @Override
     public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> countInput(L3Settings settings) {
         return new CountInput<>(settings);
     }
@@ -83,6 +94,11 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
+    public <T, O> RichFlatMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> flatMap(RichFlatMapFunction<T, O> delegate) {
+        return new NonLineageRichFlatMapFunction<>(delegate);
+    }
+
+    @Override
     public <IN1, IN2, OUT> JoinFunction<L3StreamTupleContainer<IN1>, L3StreamTupleContainer<IN2>, L3StreamTupleContainer<OUT>> join(JoinFunction<IN1, IN2, OUT> delegate) {
         return new NonLineageJoinFunction<>(delegate);
     }
@@ -98,7 +114,7 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
-    public <T> WatermarkStrategy<L3StreamTupleContainer<T>> assignTimestampsAndWatermarks(WatermarkStrategy<T> delegate) {
+    public <T> WatermarkStrategy<L3StreamTupleContainer<T>> assignTimestampsAndWatermarks(WatermarkStrategy<T> delegate, int numOfPartitions) {
         return new NonLineageWatermarkStrategy<>(delegate);
     }
 

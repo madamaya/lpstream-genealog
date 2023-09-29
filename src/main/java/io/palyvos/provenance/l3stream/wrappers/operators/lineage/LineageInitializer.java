@@ -37,6 +37,7 @@ public class LineageInitializer implements MapFunction<ObjectNode, L3StreamTuple
     out.setTimestamp(timestampFunction.apply(value));
     //out.setStimulus(System.nanoTime());
     out.setStimulus(stimulusFunction.apply(value));
+    out.setPartitionId(value.get("metadata").get("partition").asInt());
     return out;
   }
 }

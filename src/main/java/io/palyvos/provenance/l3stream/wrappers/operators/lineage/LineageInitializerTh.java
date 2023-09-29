@@ -41,6 +41,7 @@ public class LineageInitializerTh extends RichMapFunction<ObjectNode, L3StreamTu
     out.setTimestamp(timestampFunction.apply(value));
     //out.setStimulus(System.nanoTime());
     out.setStimulus(stimulusFunction.apply(value));
+    out.setPartitionId(value.get("metadata").get("partition").asInt());
     count++;
     return out;
   }

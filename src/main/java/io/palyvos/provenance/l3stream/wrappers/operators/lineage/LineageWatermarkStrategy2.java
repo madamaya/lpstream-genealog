@@ -2,51 +2,37 @@ package io.palyvos.provenance.l3stream.wrappers.operators.lineage;
 
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import org.apache.flink.api.common.eventtime.*;
-import org.apache.flink.api.java.tuple.Tuple2;
 
 import java.util.*;
 
 /* Add copyright (C) 2023 Masaya Yamada */
 
-public class LineageWatermarkStrategy<T>
+public class LineageWatermarkStrategy2<T>
         implements WatermarkStrategy<L3StreamTupleContainer<T>> {
 
     private final WatermarkStrategy<T> delegate;
-    private final int numOfPartitions;
 
-    public LineageWatermarkStrategy(WatermarkStrategy<T> delegate, int numOfPartitions) {
+    public LineageWatermarkStrategy2(WatermarkStrategy<T> delegate) {
         this.delegate = delegate;
-        if (numOfPartitions <= 0) {
-            throw new IllegalArgumentException("LineageWatermarkStrategy: numOfPartitions = " + numOfPartitions + " < 0");
-        }
-        this.numOfPartitions = numOfPartitions;
-    }
-
-    @Override
-    public TimestampAssigner<L3StreamTupleContainer<T>> createTimestampAssigner(TimestampAssignerSupplier.Context context) {
-        return new TimestampAssigner<L3StreamTupleContainer<T>>() {
-            @Override
-            public long extractTimestamp(L3StreamTupleContainer<T> tl3StreamTupleContainer, long l) {
-                return delegate.createTimestampAssigner(context).extractTimestamp(tl3StreamTupleContainer.tuple(), l);
-            }
-        };
     }
 
     @Override
     public WatermarkGenerator<L3StreamTupleContainer<T>> createWatermarkGenerator(WatermarkGeneratorSupplier.Context context) {
         return new WatermarkGenerator<L3StreamTupleContainer<T>>() {
-            HashMap<Long, Long> hm = new HashMap<>();
+            HashMap<Long, Long> hm = new HashMap<>(){{put(0L, 0L);}};
 
             @Override
             public void onEvent(L3StreamTupleContainer<T> value, long l, WatermarkOutput watermarkOutput) {
                 hm.put(value.getPartitionId(), l);
+                // delegate.createWatermarkGenerator(context).onEvent(value.tuple(), l, watermarkOutput);
             }
 
             @Override
             public void onPeriodicEmit(WatermarkOutput watermarkOutput) {
-                if (hm.size() == numOfPartitions) {
+                if (hm.size() == 4) {
                     watermarkOutput.emitWatermark(new Watermark(findMinimumWM(hm) - 1));
                 }
+                // delegate.createWatermarkGenerator(context).onPeriodicEmit(watermarkOutput);
             }
         };
     }
@@ -61,4 +47,13 @@ public class LineageWatermarkStrategy<T>
         Collections.sort(vList);
         return vList.get(0);
     }
+
+
+    // CNFM: デフォルトだとTimestampAssignerはingestionTimeに基づいたタイムスタンプを付与
+    /*
+    @Override
+    public TimestampAssigner<L3StreamTupleContainer<T>> createTimestampAssigner(TimestampAssignerSupplier.Context context) {
+        return WatermarkStrategy.super.createTimestampAssigner(context);
+    }
+    */
 }

@@ -2,19 +2,20 @@ package io.palyvos.provenance.l3stream.wrappers.operators.lineage;
 
 import io.palyvos.provenance.genealog.GenealogMapHelper;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
+import org.apache.flink.api.common.eventtime.TimestampAssigner;
 import org.apache.flink.api.common.functions.MapFunction;
 
 import java.util.function.Function;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
-public class LineageUpdateTsFunction<T>
+public class LineageUpdateTsFunctionWM<T>
     implements MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> {
 
-  private final Function<L3StreamTupleContainer<T>, Long> tsUpdateFunction;
+  private final TimestampAssigner<T> tsAssigner;
 
-  public LineageUpdateTsFunction(Function<L3StreamTupleContainer<T>, Long> tsUpdateFunction) {
-    this.tsUpdateFunction = tsUpdateFunction;
+  public LineageUpdateTsFunctionWM(TimestampAssigner<T> tsAssigner) {
+    this.tsAssigner = tsAssigner;
   }
 
   @Override
@@ -23,7 +24,7 @@ public class LineageUpdateTsFunction<T>
     GenealogMapHelper.INSTANCE.annotateResult(value, genealogResult);
     genealogResult.setLineageReliable(value.getLineageReliable());
     genealogResult.copyTimes(value);
-    genealogResult.setTimestamp(tsUpdateFunction.apply(value));
+    genealogResult.setTimestamp(tsAssigner.extractTimestamp(value.tuple(), -1));
     genealogResult.setPartitionId(value.getPartitionId());
     return genealogResult;
   }
