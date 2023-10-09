@@ -54,8 +54,8 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
-    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy) {
-        return new NonLineageUpdateTsFunctionWM2<>(watermarkStrategy);
+    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy, String ip, int id) {
+        return new NonLineageUpdateTsFunctionWM2<>(watermarkStrategy, ip, id);
     }
 
     @Override
@@ -69,12 +69,12 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
-    public <T, KEY> KeySelector<L3StreamTupleContainer<T>, KEY> key(KeySelector<T, KEY> delegate) {
+    public <T, KEY> KeySelector<L3StreamTupleContainer<T>, KEY> keyBy(KeySelector<T, KEY> delegate) {
         return new NonLineageKeySelector<>(delegate);
     }
 
     @Override
-    public <T, KEY> KeySelector<L3StreamTupleContainer<T>, KEY> key(KeySelector<T, KEY> delegate, Class<KEY> clazz) {
+    public <T, KEY> KeySelector<L3StreamTupleContainer<T>, KEY> keyBy(KeySelector<T, KEY> delegate, Class<KEY> clazz) {
         return new NonLineageKeySelectorWithTypeInfo<>(delegate, clazz);
     }
 
@@ -86,6 +86,11 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     @Override
     public <T, O> MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> map(MapFunction<T, O> delegate) {
         return new NonLineageMapFunction<>(delegate);
+    }
+
+    @Override
+    public <T, O> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> richMap(RichMapFunction<T, O> delegate) {
+        return new NonLineageRichMapFunction<>(delegate);
     }
 
     @Override

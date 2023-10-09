@@ -22,7 +22,7 @@ public class LineageJoinFunction<IN1, IN2, OUT>
     OUT result = delegate.join(first.tuple(), second.tuple());
     L3StreamTupleContainer<OUT> genealogResult = new L3StreamTupleContainer<>(result);
     GenealogJoinHelper.INSTANCE.annotateResult(first, second, genealogResult);
-    genealogResult.setLineageReliable(first.getLineageReliable() && second.getLineageReliable());
+    genealogResult.setLineageReliable(first.getGenealogData() != null && second.getGenealogData() != null && first.getLineageReliable() && second.getLineageReliable());
     genealogResult.copyTimes(first, second);
     return genealogResult;
   }
