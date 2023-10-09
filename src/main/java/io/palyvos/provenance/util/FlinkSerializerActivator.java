@@ -1,6 +1,7 @@
 package io.palyvos.provenance.util;
 
 import com.esotericsoftware.kryo.Serializer;
+import io.palyvos.provenance.ananke.aggregate.SortedPointersAggregateStrategy;
 import io.palyvos.provenance.genealog.GenealogData;
 import io.palyvos.provenance.genealog.GenealogDataSerializer;
 import io.palyvos.provenance.ananke.stdops.HelperProvenanceGraphTuple;
@@ -8,8 +9,11 @@ import io.palyvos.provenance.ananke.functions.CustomGenericSerializer;
 import io.palyvos.provenance.ananke.functions.ProvenanceTupleContainer;
 import io.palyvos.provenance.ananke.functions.ProvenanceTupleContainer.KryoSerializer;
 import java.io.Serializable;
+
+import io.palyvos.provenance.l3stream.wrappers.operators.serializer.SortedPointersAggregateStrategySerializer;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public enum FlinkSerializerActivator {
   NOPROVENANCE {
     @Override
@@ -56,6 +60,35 @@ public enum FlinkSerializerActivator {
       env.addDefaultKryoSerializer(
           HelperProvenanceGraphTuple.class,
           new HelperProvenanceGraphTuple.KryoSerializer(customGenericSerializer));
+
+      return new SerializerRegistry(customGenericSerializer, genealogDataSerializer);
+    }
+  },
+  L3STREAM {
+    @Override
+    public SerializerRegistry activate(StreamExecutionEnvironment env,
+                                       ExperimentSettings settings) {
+      final GenealogDataSerializer genealogDataSerializer =
+              GenealogDataSerializer.newInstance(
+                      settings.aggregateStrategySupplier().get(),
+                      settings.statisticsFolder(),
+                      settings.graphTraversalStatistics());
+
+      env.addDefaultKryoSerializer(GenealogData.class, genealogDataSerializer);
+
+      final CustomGenericSerializer customGenericSerializer = new CustomGenericSerializer();
+
+      final KryoSerializer tupleContainerSerializer =
+              new KryoSerializer(genealogDataSerializer, customGenericSerializer);
+      env.addDefaultKryoSerializer(ProvenanceTupleContainer.class, tupleContainerSerializer);
+
+      env.addDefaultKryoSerializer(
+              HelperProvenanceGraphTuple.class,
+              new HelperProvenanceGraphTuple.KryoSerializer(customGenericSerializer));
+
+      env.addDefaultKryoSerializer(
+              SortedPointersAggregateStrategy.class,
+              new SortedPointersAggregateStrategySerializer());
 
       return new SerializerRegistry(customGenericSerializer, genealogDataSerializer);
     }
