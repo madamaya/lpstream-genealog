@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 class PointerListIterator implements Iterator<GenealogTuple> {
 
   private final GenealogTuple start;
@@ -16,7 +17,7 @@ class PointerListIterator implements Iterator<GenealogTuple> {
     this.start = start;
     this.end = end;
     this.current = start;
-    this.hasNext = true;
+    this.hasNext = (start != null) && (end != null);
   }
 
   @Override

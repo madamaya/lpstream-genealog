@@ -9,6 +9,7 @@ import java.util.Iterator;
  * tuples in the list is arbitrary (depending on tuple arrival order). It does not support
  * out-of-order arrivals of tuples in the window.
  */
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class UnsortedPointersAggregateStrategy implements ProvenanceAggregateStrategy {
 
   GenealogTuple earliest;
@@ -43,4 +44,19 @@ public class UnsortedPointersAggregateStrategy implements ProvenanceAggregateStr
     return new PointerListIterator(tuple.getU2(), tuple.getU1());
   }
 
+  public GenealogTuple getEarliest() {
+    return earliest;
+  }
+
+  public void setEarliest(GenealogTuple earliest) {
+    this.earliest = earliest;
+  }
+
+  public GenealogTuple getLatest() {
+    return latest;
+  }
+
+  public void setLatest(GenealogTuple latest) {
+    this.latest = latest;
+  }
 }
