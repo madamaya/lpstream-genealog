@@ -21,6 +21,10 @@ public class LineageSerializer<T> implements KafkaSerializationSchema<L3StreamTu
 
     @Override
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, @Nullable Long aLong) {
+        String lineage = "";
+        if (tuple.getLineageReliable()) {
+            lineage = FormatLineage.formattedLineage(genealogGraphTraverser.getProvenance(tuple));
+        }
         String ret = "{\"OUT\":\"" + tuple.tuple() + "\"}";
         return new ProducerRecord<>(topic, ret.getBytes(StandardCharsets.UTF_8));
     }

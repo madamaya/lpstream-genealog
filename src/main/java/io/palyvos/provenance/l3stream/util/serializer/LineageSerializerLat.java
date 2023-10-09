@@ -21,7 +21,10 @@ public class LineageSerializerLat<T> implements KafkaSerializationSchema<L3Strea
 
     @Override
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, @Nullable Long aLong) {
-        String lineage = FormatLineage.formattedLineage(genealogGraphTraverser.getProvenance(tuple));
+        String lineage = "";
+        if (tuple.getLineageReliable()) {
+            lineage = FormatLineage.formattedLineage(genealogGraphTraverser.getProvenance(tuple));
+        }
         String latency = Long.toString(System.nanoTime() - tuple.getStimulus());
         return new ProducerRecord<>(topic, latency.getBytes(StandardCharsets.UTF_8));
     }
