@@ -5,6 +5,7 @@ import io.palyvos.provenance.util.BaseTuple;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class LinearRoadInputTuple extends BaseTuple {
 
   private static final Pattern DELIMITER_PATTERN = Pattern.compile(",");
@@ -146,6 +147,6 @@ public class LinearRoadInputTuple extends BaseTuple {
   @Override
   public String toString() {
     return type + "," + getTimestamp() + "," + vid + "," + speed + ","
-        + xway + "," + lane + "," + dir + "," + seg + "," + pos;
+        + xway + "," + lane + "," + dir + "," + seg + "," + pos + "," + getKey();
   }
 }
