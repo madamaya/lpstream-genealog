@@ -418,6 +418,14 @@ public class ExperimentSettings implements Serializable {
     return cpMServerIP;
   }
 
+
+  @Parameter(names = "--RedisIP")
+  private String redisIp = "localhost";
+
+  public String getRedisIp() {
+    return redisIp;
+  }
+
   @Parameter(names = "--CpMServerPort", required = true)
   private int cpMServerPort;
 
@@ -432,5 +440,32 @@ public class ExperimentSettings implements Serializable {
 
   public int getLatencyFlag() {
     return latencyFlag;
+  }
+
+  @Parameter(names = "--cpmProcessing", converter = CpmProcessingConverter.class)
+  private boolean cpmProcessing = false;
+
+  public boolean cpmProcessing() {
+    return cpmProcessing;
+  }
+
+  private static class CpmProcessingConverter implements IStringConverter<Boolean> {
+    @Override
+    public Boolean convert(String value) {
+      switch (value) {
+        case "true":
+          return true;
+        default:
+          throw new IllegalArgumentException("CpmProcessingConverter: Undefined value is provided.");
+      }
+    }
+  }
+
+  public int numOfInstanceWM() {
+    if (getLineageMode() == "NonLineageMode") {
+      return 1;
+    } else {
+      return maxParallelism();
+    }
   }
 }
