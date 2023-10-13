@@ -25,7 +25,7 @@ public class LineageSerializerLin<T> implements KafkaSerializationSchema<L3Strea
         if (tuple.getLineageReliable()) {
             lineage = FormatLineage.formattedLineage(genealogGraphTraverser.getProvenance(tuple));
         }
-        String ret = "{\"OUT\":\"" + tuple.tuple() + "\",\"CPID\":\"" + tuple.getCheckpointId() + "\",\"LINEAGE\":[" + lineage + "]" + ",\"FLAG\":\"" + tuple.getLineageReliable() + "\"}";
+        String ret = "{\"OUT\":\"" + tuple.tuple() + "\",\"TS\":\"" + tuple.getTimestamp() + "\",\"CPID\":\"" + tuple.getCheckpointId() + "\",\"LINEAGE\":[" + lineage + "]" + ",\"FLAG\":\"" + tuple.getLineageReliable() + "\"}";
         return new ProducerRecord<>(topic, ret.getBytes(StandardCharsets.UTF_8));
     }
 }
