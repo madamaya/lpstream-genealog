@@ -103,8 +103,6 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
         this.latencyTs = stimulus;
     }
 
-    // BUG: シリアライザ実装
-
 
     @Override
     public String toString() {
