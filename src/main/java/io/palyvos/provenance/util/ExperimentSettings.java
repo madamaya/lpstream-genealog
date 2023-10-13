@@ -468,4 +468,12 @@ public class ExperimentSettings implements Serializable {
       return maxParallelism();
     }
   }
+
+  public String getTopicSuffix() {
+    if (this.getLineageMode() == "NonLineageMode") {
+      return "-o";
+    } else {
+      return "-l";
+    }
+  }
 }
