@@ -43,16 +43,16 @@ public class ExperimentSettings implements Serializable {
   private static final String PROVENANCE_WRITES = "provwrites";
   private static final String DELIVERY_LATENCY = "deliverylatency";
 
-  @Parameter(names = "--statisticsFolder", required = true, description = "path where output files will be stored")
+  @Parameter(names = "--statisticsFolder", required = false, description = "path where output files will be stored")
   private String statisticsFolder;
 
   @Parameter(names = "--inputFile", description = "the input file of the streaming query")
   private String inputFile;
 
-  @Parameter(names = "--outputFile", required = true, description = "the name of the file to store where the output of the query will be stored")
+  @Parameter(names = "--outputFile", required = false, description = "the name of the file to store where the output of the query will be stored")
   private String outputFile;
 
-  @Parameter(names = "--sourcesNumber", required = true, description = "number of sources of the streaming query")
+  @Parameter(names = "--sourcesNumber", required = false, description = "number of sources of the streaming query")
   private int sourcesNumber = 1;
 
   @Parameter(names = "--autoFlush")
@@ -411,8 +411,8 @@ public class ExperimentSettings implements Serializable {
     }
   }
 
-  @Parameter(names = "--CpMServerIP", required = true)
-  private String cpMServerIP;
+  @Parameter(names = "--CpMServerIP")
+  private String cpMServerIP = "localhost";
 
   public String getCpMServerIP() {
     return cpMServerIP;
@@ -426,11 +426,25 @@ public class ExperimentSettings implements Serializable {
     return redisIp;
   }
 
-  @Parameter(names = "--CpMServerPort", required = true)
-  private int cpMServerPort;
+  @Parameter(names = "--CpMServerPort")
+  private int cpMServerPort = 10010;
 
   public int getCpMServerPort() {
     return cpMServerPort;
+  }
+
+  @Parameter(names = "--RedisPort")
+  private int redisPort = 6379;
+
+  public int getRedisPort() {
+    return redisPort;
+  }
+
+  @Parameter(names = "--lineageTopic")
+  private String lineageTopic = "lineage";
+
+  public String getLineageTopic() {
+    return lineageTopic;
   }
 
   // latencyFlag = 0 -> Produce output value
@@ -474,6 +488,14 @@ public class ExperimentSettings implements Serializable {
       return "-o";
     } else {
       return "-l";
+    }
+  }
+
+  public String getOutputTopicName(String name) {
+    if (this.getLineageMode() == "NonLineageMode") {
+      return name;
+    } else {
+      return getLineageTopic();
     }
   }
 }
