@@ -1,6 +1,7 @@
 package io.palyvos.provenance.l3stream.wrappers.operators.nonlineage;
 
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
+import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.api.common.eventtime.TimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -19,25 +20,27 @@ import java.util.Set;
 public class NonLineageUpdateTsFunctionWM2<T>
     extends RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> implements CheckpointListener {
 
-  private String ip;
+  private String redisIP;
+  private int redisPort;
+  private int sourceID;
   private JedisPool jp;
   private Jedis jedis;
   private transient TimestampAssigner<T> tsAssigner;
   private final WatermarkStrategy<T> watermarkStrategy;
   private long latestTs = -1;
-  private int id;
 
-  public NonLineageUpdateTsFunctionWM2(WatermarkStrategy<T> watermarkStrategy, String ip, int id) {
+  public NonLineageUpdateTsFunctionWM2(WatermarkStrategy<T> watermarkStrategy, ExperimentSettings settings, int sourceID) {
     this.watermarkStrategy = watermarkStrategy;
-    this.ip = ip;
-    this.id = id;
+    this.redisIP = settings.getRedisIp();
+    this.redisPort = settings.getRedisPort();
+    this.sourceID = sourceID;
   }
 
   @Override
   public void open(Configuration parameters) throws Exception {
     tsAssigner = watermarkStrategy.createTimestampAssigner(null);
 
-    jp = new JedisPool(ip, 6379);
+    jp = new JedisPool(redisIP, redisPort);
     try {
       jedis = jp.getResource();
     } catch (NumberFormatException e) {
@@ -59,6 +62,6 @@ public class NonLineageUpdateTsFunctionWM2<T>
 
   @Override
   public void notifyCheckpointComplete(long l) throws Exception {
-    jedis.set(Long.toString(l) + "," + Integer.toString(getRuntimeContext().getIndexOfThisSubtask()) + "," + id, String.valueOf(latestTs));
+    jedis.set(Long.toString(l) + "," + Integer.toString(getRuntimeContext().getIndexOfThisSubtask()) + "," + sourceID, String.valueOf(latestTs));
   }
 }
