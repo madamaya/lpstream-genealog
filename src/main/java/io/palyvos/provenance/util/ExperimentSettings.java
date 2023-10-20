@@ -411,13 +411,13 @@ public class ExperimentSettings implements Serializable {
     }
   }
 
+  /*
   @Parameter(names = "--CpMServerIP")
   private String cpMServerIP = "localhost";
 
   public String getCpMServerIP() {
     return cpMServerIP;
   }
-
 
   @Parameter(names = "--RedisIP")
   private String redisIp = "localhost";
@@ -439,6 +439,7 @@ public class ExperimentSettings implements Serializable {
   public int getRedisPort() {
     return redisPort;
   }
+   */
 
   @Parameter(names = "--lineageTopic")
   private String lineageTopic = "lineage";
@@ -483,6 +484,7 @@ public class ExperimentSettings implements Serializable {
     }
   }
 
+  /*
   public String getTopicSuffix() {
     if (this.getLineageMode() == "NonLineageMode") {
       return "-o";
@@ -490,6 +492,7 @@ public class ExperimentSettings implements Serializable {
       return "-l";
     }
   }
+   */
 
   public String getOutputTopicName(String name) {
     if (this.getLineageMode() == "NonLineageMode") {
