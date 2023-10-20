@@ -54,7 +54,7 @@ public class LineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
-    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy, ExperimentSettings settings, int sourceID) {
+    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy, int sourceID) {
         return new LineageUpdateTsFunctionWM2<>(watermarkStrategy);
     }
 

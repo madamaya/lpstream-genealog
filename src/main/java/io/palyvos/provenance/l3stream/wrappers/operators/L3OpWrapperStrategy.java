@@ -28,7 +28,7 @@ public interface L3OpWrapperStrategy {
 
     public <T> MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTs(TimestampAssigner<T> timestampFunction);
 
-    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy, ExperimentSettings settings, int sourceID);
+    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy, int sourceID);
 
     public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> countInput(L3Settings settings);
 

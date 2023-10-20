@@ -54,8 +54,8 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
-    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy, ExperimentSettings settings, int sourceID) {
-        return new NonLineageUpdateTsFunctionWM2<>(watermarkStrategy, settings, sourceID);
+    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy, int sourceID) {
+        return new NonLineageUpdateTsFunctionWM2<>(watermarkStrategy, sourceID);
     }
 
     @Override

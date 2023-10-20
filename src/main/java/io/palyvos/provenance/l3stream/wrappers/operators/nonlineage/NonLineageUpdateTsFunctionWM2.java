@@ -1,5 +1,6 @@
 package io.palyvos.provenance.l3stream.wrappers.operators.nonlineage;
 
+import io.palyvos.provenance.l3stream.conf.L3conf;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.api.common.eventtime.TimestampAssigner;
@@ -20,8 +21,8 @@ import java.util.Set;
 public class NonLineageUpdateTsFunctionWM2<T>
     extends RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> implements CheckpointListener {
 
-  private String redisIP;
-  private int redisPort;
+  private String redisIP = L3conf.REDIS_IP;
+  private int redisPort = L3conf.REDIS_PORT;
   private int sourceID;
   private JedisPool jp;
   private Jedis jedis;
@@ -29,10 +30,8 @@ public class NonLineageUpdateTsFunctionWM2<T>
   private final WatermarkStrategy<T> watermarkStrategy;
   private long latestTs = -1;
 
-  public NonLineageUpdateTsFunctionWM2(WatermarkStrategy<T> watermarkStrategy, ExperimentSettings settings, int sourceID) {
+  public NonLineageUpdateTsFunctionWM2(WatermarkStrategy<T> watermarkStrategy, int sourceID) {
     this.watermarkStrategy = watermarkStrategy;
-    this.redisIP = settings.getRedisIp();
-    this.redisPort = settings.getRedisPort();
     this.sourceID = sourceID;
   }
 
