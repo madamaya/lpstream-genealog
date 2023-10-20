@@ -303,7 +303,8 @@ public class ExperimentSettings implements Serializable {
     } else if (TimestampedFileProvenanceGraphEncoder.class.getSimpleName().equals(graphEncoder)) {
       return new TimestampedFileProvenanceGraphEncoder(outputFile(subtaskIndex, name), autoFlush);
     } else if (GephiProvenanceGraphEncoder.class.getSimpleName().equals(graphEncoder)) {
-      return new GephiProvenanceGraphEncoder("workspace1");
+      throw new UnsupportedOperationException();
+      // return new GephiProvenanceGraphEncoder("workspace1");
     } else if (NoOpProvenanceGraphEncoder.class.getSimpleName().equals(graphEncoder)) {
       return new NoOpProvenanceGraphEncoder();
     } else {

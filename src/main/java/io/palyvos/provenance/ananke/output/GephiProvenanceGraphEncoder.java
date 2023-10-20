@@ -15,12 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -164,23 +158,7 @@ public class GephiProvenanceGraphEncoder implements ProvenanceGraphEncoder, Seri
   }
 
   private void addGraphEntities(Gson gson, String command, Map<String, ?> entities) {
-    Map<String, Map<String, ?>> requests = new HashMap<>();
-    requests.put(command, entities);
-    String requestsJson = gson.toJson(requests);
-    StringEntity requestEntity = new StringEntity(requestsJson, ContentType.APPLICATION_JSON);
-    HttpPost postMethod =
-        new HttpPost(
-            String.format("http://localhost:8080/%s?operation=updateGraph", gephiWorkspace));
-    postMethod.setEntity(requestEntity);
-    HttpClient httpClient = HttpClients.createDefault();
-    try {
-      HttpResponse rawResponse = httpClient.execute(postMethod);
-      if (rawResponse.getStatusLine().getStatusCode() != 200) {
-        System.out.println("Failed to POST node to Gephi");
-      }
-    } catch (Exception exception) {
-      exception.printStackTrace();
-    }
+    throw new UnsupportedOperationException();
   }
 
   private static Map<String, Object> newGraphNode(String label, Integer type, Object data,

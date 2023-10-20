@@ -33,18 +33,6 @@ public class WatermarkTriggeringSink<IN> extends StreamSink<IN> {
   public static <T> void addSink(DataStream<T> stream, String name, int parallelism,
       boolean disableChaining, SinkFunction<T> sinkFunction,
       Consumer<Watermark> watermarkConsumer) {
-
-    if (sinkFunction instanceof InputTypeConfigurable) {
-      ((InputTypeConfigurable) sinkFunction)
-          .setInputType(stream.getType(), stream.getExecutionConfig());
-    }
-
-    StreamSink<T> sinkOperator = new WatermarkTriggeringSink<>(sinkFunction, watermarkConsumer);
-    SinkTransformation<T> transformation = new SinkTransformation<T>(stream.getTransformation(),
-        name, sinkOperator, parallelism);
-    if (disableChaining) {
-      transformation.setChainingStrategy(ChainingStrategy.NEVER);
-    }
-    stream.getExecutionEnvironment().addOperator(transformation);
+    throw new UnsupportedOperationException();
   }
 }
