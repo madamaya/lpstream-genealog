@@ -11,6 +11,7 @@ import org.apache.flink.streaming.api.operators.StreamSink;
 import org.apache.flink.streaming.api.transformations.SinkTransformation;
 import org.apache.flink.streaming.api.watermark.Watermark;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class WatermarkTriggeringSink<IN> extends StreamSink<IN> {
 
   private final Consumer<Watermark> watermarkConsumer;

@@ -18,6 +18,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class GephiProvenanceGraphEncoder implements ProvenanceGraphEncoder, Serializable {
 
   private static final Set<Class<?>> ACCEPTED_DATA_CLASSES = new HashSet<>();
