@@ -1,6 +1,7 @@
 package io.palyvos.provenance.l3stream.wrappers.operators.lineage;
 
 import io.palyvos.provenance.genealog.GenealogTupleType;
+import io.palyvos.provenance.l3stream.conf.L3conf;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.api.common.functions.RichMapFunction;
@@ -9,27 +10,19 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.Obje
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.function.Function;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
 public class LineageInitializerTh extends RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> {
-
-  private final Function<ObjectNode, Long> timestampFunction;
-  private final Function<ObjectNode, Long> stimulusFunction;
   long start;
   long count;
-  String flag;
   ExperimentSettings settings;
 
-  public <F extends Function<ObjectNode, Long> & Serializable> LineageInitializerTh(F timestampFunction,
-                                                                                    F stimulusFunction,
-                                                                                    ExperimentSettings settings,
-                                                                                    String flag) {
-    this.timestampFunction = timestampFunction;
-    this.stimulusFunction = stimulusFunction;
+  public <F extends Function<ObjectNode, Long> & Serializable> LineageInitializerTh(ExperimentSettings settings) {
     this.settings = settings;
-    this.flag = flag;
   }
 
   @Override
@@ -38,9 +31,9 @@ public class LineageInitializerTh extends RichMapFunction<ObjectNode, L3StreamTu
     out.initGenealog(GenealogTupleType.SOURCE);
     out.setLineageReliable(true);
     //out.setTimestamp(System.currentTimeMillis());
-    out.setTimestamp(timestampFunction.apply(value));
-    //out.setStimulus(System.nanoTime());
-    out.setStimulus(stimulusFunction.apply(value));
+    //out.setTimestamp(timestampFunction.apply(value));
+    out.setStimulus(System.nanoTime());
+    //out.setStimulus(stimulusFunction.apply(value));
     out.setPartitionId(value.get("metadata").get("partition").asInt());
     count++;
     return out;
@@ -49,14 +42,20 @@ public class LineageInitializerTh extends RichMapFunction<ObjectNode, L3StreamTu
   @Override
   public void open(Configuration parameters) throws Exception {
     super.open(parameters);
-    start = System.currentTimeMillis();
+    start = System.nanoTime();
     count = 0L;
   }
 
   @Override
   public void close() throws Exception {
-    long end = System.currentTimeMillis();
-    PrintWriter pw = new PrintWriter(System.getenv("HOME") + "/logs/" + flag + "lineage/throughput" + getRuntimeContext().getIndexOfThisSubtask() + "_" + end + "_-short_-1_0_1000.log.log");
+    long end = System.nanoTime();
+
+    String dataPath = L3conf.L3_HOME + "/data/output/throughput/" + settings.getQueryName();
+    if (Files.notExists(Paths.get(dataPath))) {
+      Files.createDirectories(Paths.get(dataPath));
+    }
+
+    PrintWriter pw = new PrintWriter(dataPath + "/" + settings.getStartTime() + "_" + getRuntimeContext().getIndexOfThisSubtask() + ".log");
     pw.println(start + "," + end + "," + (end - start) + "," + count);
     pw.flush();
     pw.close();
