@@ -87,7 +87,7 @@ public class ExperimentSettings implements Serializable {
 
   @Parameter(names = "--aggregateStrategy", converter = AggregateStrategyConverter.class, description = "strategy for handling out-of-order aggregate tuples")
   private Supplier<ProvenanceAggregateStrategy> aggregateStrategySupplier =
-      (Supplier<ProvenanceAggregateStrategy> & Serializable) UnsortedPointersAggregateStrategy::new;
+      (Supplier<ProvenanceAggregateStrategy> & Serializable) SortedPointersAggregateStrategy::new;
 
   @Parameter(names = "--graphEncoder", description = "output encoder for the forward-provenance graph")
   private String graphEncoder = TimestampedFileProvenanceGraphEncoder.class.getSimpleName();
@@ -376,7 +376,7 @@ public class ExperimentSettings implements Serializable {
   }
 
   // Modification start
-  @Parameter(names = "--lineageMode", required = true, converter = L3OpWrapperStrategyConverter.class)
+  @Parameter(names = "--lineageMode", converter = L3OpWrapperStrategyConverter.class)
   transient private Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy> l3OpWrapperStrategy;
 
   public Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy> l3OpWrapperStrategy() {
@@ -465,6 +465,32 @@ public class ExperimentSettings implements Serializable {
     return cpmProcessing;
   }
 
+  @Parameter(names = "--queryName")
+  private String queryName = String.valueOf(System.currentTimeMillis());
+
+  public String getQueryName() {
+    return queryName;
+  }
+
+  public long startTime = System.currentTimeMillis();
+
+  public long getStartTime() {
+    return startTime;
+  }
+
+  @Parameter(names = "--windowSize1")
+  private String windowSize1;
+
+  public String getWindowSize1() {
+    return windowSize1;
+  }
+
+  @Parameter(names = "--windowSize2")
+  private String windowSize2;
+
+  public String getWindowSize2() {
+    return windowSize2;
+  }
   private static class CpmProcessingConverter implements IStringConverter<Boolean> {
     @Override
     public Boolean convert(String value) {
