@@ -28,7 +28,7 @@ public class LinearRoadInputTuple extends BaseTuple {
     }
   }
 
-  protected LinearRoadInputTuple(String[] readings) {
+  public LinearRoadInputTuple(String[] readings) {
     this(Integer
             .valueOf(readings[0]), Long.valueOf(readings[1]),
         Integer.valueOf(readings[2]), Integer
@@ -40,9 +40,22 @@ public class LinearRoadInputTuple extends BaseTuple {
             .valueOf(readings[8]), System.currentTimeMillis());
   }
 
-  protected LinearRoadInputTuple(int type, long time, int vid, int speed,
+  public LinearRoadInputTuple(int type, long time, int vid, int speed,
       int xway, int lane, int dir, int seg, int pos, long stimulus) {
     super(time, String.valueOf(vid), stimulus);
+    this.type = type;
+    this.vid = vid;
+    this.speed = speed;
+    this.xway = xway;
+    this.lane = lane;
+    this.dir = dir;
+    this.seg = seg;
+    this.pos = pos;
+  }
+
+  public LinearRoadInputTuple(int type, long time, int vid, int speed,
+                                 int xway, int lane, int dir, int seg, int pos) {
+    super(time, String.valueOf(vid));
     this.type = type;
     this.vid = vid;
     this.speed = speed;

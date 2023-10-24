@@ -8,12 +8,18 @@ import io.palyvos.provenance.util.BaseTuple;
 import java.io.Serializable;
 import java.util.Objects;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class CountTuple extends BaseTuple {
 
   protected final long count;
 
   public CountTuple(long timestamp, String key, long stimulus, long count) {
     super(timestamp, key, stimulus);
+    this.count = count;
+  }
+
+  public CountTuple(long timestamp, String key, long count) {
+    super(timestamp, key);
     this.count = count;
   }
 

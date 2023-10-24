@@ -4,6 +4,7 @@ package io.palyvos.provenance.usecases.linearroad.noprovenance;
 import io.palyvos.provenance.util.BaseTuple;
 import java.util.Objects;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class VehicleTuple extends BaseTuple {
 
 	private int vid;
@@ -28,6 +29,19 @@ public class VehicleTuple extends BaseTuple {
 		this.latestPos = pos;
 		this.uniquePosition = uniquePosition;
 	}
+
+    public VehicleTuple(long timestamp, int vid, int reports, int xway, int lane,
+                        int dir, int seg, int pos, boolean uniquePosition) {
+        super(timestamp, xway + "," + lane + "," + dir + "," + seg + "," + pos);
+        this.vid = vid;
+        this.reports = reports;
+        this.latestXWay = xway;
+        this.latestLane = lane;
+        this.latestDir = dir;
+        this.latestSeg = seg;
+        this.latestPos = pos;
+        this.uniquePosition = uniquePosition;
+    }
 
   public int getVid() {
     return vid;

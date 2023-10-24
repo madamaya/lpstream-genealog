@@ -2,6 +2,7 @@ package io.palyvos.provenance.util;
 
 import java.util.Objects;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class BaseTuple implements TimestampedTuple {
 
   protected long timestamp;
@@ -13,6 +14,11 @@ public class BaseTuple implements TimestampedTuple {
   public BaseTuple(long timestamp, String key, long stimulus) {
     this.timestamp = timestamp;
     this.stimulus = stimulus;
+    this.key = key;
+  }
+
+  public BaseTuple(long timestamp, String key) {
+    this.timestamp = timestamp;
     this.key = key;
   }
 

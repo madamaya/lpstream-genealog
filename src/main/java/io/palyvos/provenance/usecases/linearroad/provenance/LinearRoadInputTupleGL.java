@@ -6,6 +6,7 @@ import io.palyvos.provenance.genealog.GenealogTupleType;
 import io.palyvos.provenance.usecases.linearroad.noprovenance.LinearRoadInputTuple;
 import java.util.regex.Pattern;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class LinearRoadInputTupleGL extends
     LinearRoadInputTuple implements GenealogTuple {
 
@@ -16,7 +17,7 @@ public class LinearRoadInputTupleGL extends
     super(readings);
   }
 
-  protected LinearRoadInputTupleGL(int type, long time, int vid, int speed, int xway, int lane,
+  public LinearRoadInputTupleGL(int type, long time, int vid, int speed, int xway, int lane,
       int dir, int seg, int pos, long stimulus) {
     super(type, time, vid, speed, xway, lane, dir, seg, pos, stimulus);
   }
