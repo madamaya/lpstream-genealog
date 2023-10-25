@@ -44,7 +44,12 @@ public class LineageModeStrategy implements L3OpWrapperStrategy {
 
     @Override
     public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings) {
-        return new LineageInitializerTh(settings);
+        return new LineageInitializerTh(settings, 0);
+    }
+
+    @Override
+    public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings, int sourceID) {
+        return new LineageInitializerTh(settings, sourceID);
     }
 
     /*

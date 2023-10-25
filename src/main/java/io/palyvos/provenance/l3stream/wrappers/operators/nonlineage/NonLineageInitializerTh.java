@@ -20,9 +20,11 @@ public class NonLineageInitializerTh extends RichMapFunction<ObjectNode, L3Strea
   long start;
   long count;
   ExperimentSettings settings;
+  int sourceID;
 
-  public <F extends Function<ObjectNode, Long> & Serializable> NonLineageInitializerTh(ExperimentSettings settings) {
+  public <F extends Function<ObjectNode, Long> & Serializable> NonLineageInitializerTh(ExperimentSettings settings, int sourceID) {
     this.settings = settings;
+    this.sourceID = sourceID;
   }
 
   @Override
@@ -51,7 +53,7 @@ public class NonLineageInitializerTh extends RichMapFunction<ObjectNode, L3Strea
       Files.createDirectories(Paths.get(dataPath));
     }
 
-    PrintWriter pw = new PrintWriter(dataPath + "/" + settings.getStartTime() + "_" + getRuntimeContext().getIndexOfThisSubtask() + ".log");
+    PrintWriter pw = new PrintWriter(dataPath + "/" + settings.getStartTime() + "_" + sourceID + "_" + getRuntimeContext().getIndexOfThisSubtask() + ".log");
     pw.println(start + "," + end + "," + (end - start) + "," + count);
     pw.flush();
     pw.close();

@@ -20,9 +20,11 @@ public class LineageInitializerTh extends RichMapFunction<ObjectNode, L3StreamTu
   long start;
   long count;
   ExperimentSettings settings;
+  int sourceID;
 
-  public <F extends Function<ObjectNode, Long> & Serializable> LineageInitializerTh(ExperimentSettings settings) {
+  public <F extends Function<ObjectNode, Long> & Serializable> LineageInitializerTh(ExperimentSettings settings, int sourceID) {
     this.settings = settings;
+    this.sourceID = sourceID;
   }
 
   @Override
@@ -55,7 +57,7 @@ public class LineageInitializerTh extends RichMapFunction<ObjectNode, L3StreamTu
       Files.createDirectories(Paths.get(dataPath));
     }
 
-    PrintWriter pw = new PrintWriter(dataPath + "/" + settings.getStartTime() + "_" + getRuntimeContext().getIndexOfThisSubtask() + ".log");
+    PrintWriter pw = new PrintWriter(dataPath + "/" + settings.getStartTime() + "_" + sourceID + "_" + getRuntimeContext().getIndexOfThisSubtask() + ".log");
     pw.println(start + "," + end + "," + (end - start) + "," + count);
     pw.flush();
     pw.close();

@@ -23,6 +23,7 @@ public interface L3OpWrapperStrategy {
     // public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(F timestampFunction, F stimulusFunction, ExperimentSettings settings);
 
     public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings);
+    public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings, int sourceID);
 
     // public <T, F extends Function<L3StreamTupleContainer<T>, Long> & Serializable> MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTs(F timestampFunction);
 

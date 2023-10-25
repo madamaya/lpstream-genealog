@@ -44,7 +44,12 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
 
     @Override
     public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings) {
-        return new NonLineageInitializerTh(settings);
+        return new NonLineageInitializerTh(settings, 0);
+    }
+
+    @Override
+    public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings, int sourceID) {
+        return new NonLineageInitializerTh(settings, sourceID);
     }
 
     /*
