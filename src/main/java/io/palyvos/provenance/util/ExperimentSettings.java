@@ -25,6 +25,7 @@ import io.palyvos.provenance.l3stream.wrappers.operators.NonLineageModeStrategy;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.flink.streaming.api.windowing.time.Time;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
@@ -478,19 +479,17 @@ public class ExperimentSettings implements Serializable {
     return startTime;
   }
 
-  @Parameter(names = "--windowSize1")
-  private String windowSize1;
+  @Parameter(names = "--windowSize")
+  private int windowSize = 1;
 
-  public String getWindowSize1() {
-    return windowSize1;
+  public int getWindowSize() {
+    return windowSize;
   }
 
-  @Parameter(names = "--windowSize2")
-  private String windowSize2;
-
-  public String getWindowSize2() {
-    return windowSize2;
+  public Time assignExperimentWindowSize(Time time) {
+    return Time.milliseconds(time.toMilliseconds() * windowSize);
   }
+
   private static class CpmProcessingConverter implements IStringConverter<Boolean> {
     @Override
     public Boolean convert(String value) {
