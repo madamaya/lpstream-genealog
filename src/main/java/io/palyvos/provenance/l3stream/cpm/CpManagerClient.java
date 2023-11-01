@@ -1,6 +1,7 @@
 package io.palyvos.provenance.l3stream.cpm;
 
 import io.palyvos.provenance.l3stream.conf.L3conf;
+import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamInput;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.common.state.CheckpointListener;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -16,14 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class CpManagerClient extends RichMapFunction<ObjectNode, ObjectNode> implements CheckpointListener {
+public class CpManagerClient extends RichMapFunction<L3StreamInput<String>, Object> implements CheckpointListener {
 
     public CpManagerClient() {
 
     }
 
     @Override
-    public ObjectNode map(ObjectNode jsonNodes) throws Exception {
+    public Object map(L3StreamInput<String> jsonNodes) throws Exception {
         return null;
     }
 
@@ -31,15 +32,6 @@ public class CpManagerClient extends RichMapFunction<ObjectNode, ObjectNode> imp
     public void open(Configuration parameters) throws Exception {
         super.open(parameters);
         sendMessage(getRuntimeContext().getJobId().toHexString());
-
-        /*
-        jp = new JedisPool(settings.getRedisIp(), settings.getRedisPort());
-        try {
-            jedis = jp.getResource();
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
-        }
-         */
     }
 
     @Override

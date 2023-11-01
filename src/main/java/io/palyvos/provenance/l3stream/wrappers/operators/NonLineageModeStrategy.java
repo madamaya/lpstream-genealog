@@ -1,21 +1,15 @@
 package io.palyvos.provenance.l3stream.wrappers.operators;
 
 import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
-import io.palyvos.provenance.l3stream.util.L3Settings;
+import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamInput;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.l3stream.wrappers.operators.nonlineage.*;
 import io.palyvos.provenance.util.ExperimentSettings;
-import org.apache.flink.api.common.eventtime.TimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.*;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.flink.streaming.api.functions.AscendingTimestampExtractor;
 import org.apache.flink.streaming.api.functions.co.ProcessJoinFunction;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 
-import java.io.Serializable;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /* Add copyright (C) 2023 Masaya Yamada */
@@ -43,13 +37,13 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
      */
 
     @Override
-    public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings) {
-        return new NonLineageInitializerTh(settings, 0);
+    public <T> RichMapFunction<L3StreamInput<T>, L3StreamTupleContainer<L3StreamInput<T>>> initMap(ExperimentSettings settings) {
+        return new NonLineageInitializerThV2<>(settings, 0);
     }
 
     @Override
-    public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings, int sourceID) {
-        return new NonLineageInitializerTh(settings, sourceID);
+    public <T> RichMapFunction<L3StreamInput<T>, L3StreamTupleContainer<L3StreamInput<T>>> initMap(ExperimentSettings settings, int sourceID) {
+        return new NonLineageInitializerThV2<>(settings, sourceID);
     }
 
     /*

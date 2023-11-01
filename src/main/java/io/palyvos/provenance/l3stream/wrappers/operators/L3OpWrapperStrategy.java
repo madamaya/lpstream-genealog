@@ -1,19 +1,12 @@
 package io.palyvos.provenance.l3stream.wrappers.operators;
 
-import io.palyvos.provenance.l3stream.util.L3Settings;
+import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamInput;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
-import org.apache.flink.api.common.eventtime.TimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.*;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.flink.streaming.api.functions.AscendingTimestampExtractor;
 import org.apache.flink.streaming.api.functions.co.ProcessJoinFunction;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
-
-import java.io.Serializable;
-import java.util.function.Function;
 
 /* Add copyright (C) 2023 Masaya Yamada */
 
@@ -22,8 +15,8 @@ public interface L3OpWrapperStrategy {
 
     // public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(F timestampFunction, F stimulusFunction, ExperimentSettings settings);
 
-    public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings);
-    public <F extends Function<ObjectNode, Long> & Serializable> RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> initMap(ExperimentSettings settings, int sourceID);
+    public <T> RichMapFunction<L3StreamInput<T>, L3StreamTupleContainer<L3StreamInput<T>>> initMap(ExperimentSettings settings);
+    public <T> RichMapFunction<L3StreamInput<T>, L3StreamTupleContainer<L3StreamInput<T>>> initMap(ExperimentSettings settings, int sourceID);
 
     // public <T, F extends Function<L3StreamTupleContainer<T>, Long> & Serializable> MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTs(F timestampFunction);
 
