@@ -459,12 +459,14 @@ public class ExperimentSettings implements Serializable {
     return latencyFlag;
   }
 
+  /*
   @Parameter(names = "--cpmProcessing", converter = CpmProcessingConverter.class)
   private boolean cpmProcessing = false;
 
   public boolean cpmProcessing() {
     return cpmProcessing;
   }
+   */
 
   @Parameter(names = "--queryName")
   private String queryName = String.valueOf(System.currentTimeMillis());
