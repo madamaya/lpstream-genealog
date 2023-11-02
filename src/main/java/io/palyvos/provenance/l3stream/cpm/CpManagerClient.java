@@ -46,6 +46,8 @@ public class CpManagerClient extends RichMapFunction<L3StreamInput<String>, Obje
     }
 
     private void sendMessage(String message) throws Exception {
+        throw new UnsupportedOperationException();
+        /*
         try(Socket socket = new Socket()) {
             // 接続開始
             socket.connect(new InetSocketAddress(L3conf.CPMSERVER_IP, L3conf.CPMSERVER_PORT));
@@ -57,6 +59,7 @@ public class CpManagerClient extends RichMapFunction<L3StreamInput<String>, Obje
             System.err.println(e);
             throw new Exception("CpManager: sendMessage");
         }
+         */
     }
 
     private static void updateTs(Jedis jedis, int pallarelism, int numOfSOp) throws InterruptedException {
