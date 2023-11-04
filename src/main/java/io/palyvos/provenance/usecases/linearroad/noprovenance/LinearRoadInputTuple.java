@@ -17,6 +17,7 @@ public class LinearRoadInputTuple extends BaseTuple {
   private int dir;
   private int seg;
   private int pos;
+  private int partitionID;
 
   public static LinearRoadInputTuple fromReading(String reading) {
     try {
@@ -128,6 +129,14 @@ public class LinearRoadInputTuple extends BaseTuple {
 
   public void setPos(int pos) {
     this.pos = pos;
+  }
+
+  public int getPartitionID() {
+    return partitionID;
+  }
+
+  public void setPartitionID(int partitionID) {
+    this.partitionID = partitionID;
   }
 
   @Override
