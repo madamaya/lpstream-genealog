@@ -29,7 +29,7 @@ public class NonLineageInitializerThV2<T> extends RichMapFunction<L3StreamInput<
     L3StreamTupleContainer<L3StreamInput<T>> out = new L3StreamTupleContainer<>(value);
     // out.initGenealog(GenealogTupleType.SOURCE);
     //out.setTimestamp(System.currentTimeMillis());
-    out.setStimulus(System.nanoTime());
+    out.setStimulus(value.getStimulus());
     count++;
     return out;
   }

@@ -32,7 +32,7 @@ public class LineageInitializerThV2<T> extends RichMapFunction<L3StreamInput<T>,
     out.setLineageReliable(true);
     //out.setTimestamp(System.currentTimeMillis());
     //out.setTimestamp(timestampFunction.apply(value));
-    out.setStimulus(System.nanoTime());
+    out.setStimulus(value.getStimulus());
     //out.setStimulus(stimulusFunction.apply(value));
     out.setPartitionId(value.getPartitionID());
     count++;
