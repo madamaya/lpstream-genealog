@@ -12,7 +12,8 @@ import java.io.IOException;
 public class StringL3DeserializerV2 implements KafkaRecordDeserializationSchema<L3StreamInput<String>> {
     @Override
     public void deserialize(ConsumerRecord<byte[], byte[]> consumerRecord, Collector<L3StreamInput<String>> collector) throws IOException {
-        collector.collect(new L3StreamInput<>(consumerRecord.partition(), new String(consumerRecord.value())));
+        long stimulus = System.nanoTime();
+        collector.collect(new L3StreamInput<>(consumerRecord.partition(), new String(consumerRecord.value()), stimulus));
     }
 
     @Override

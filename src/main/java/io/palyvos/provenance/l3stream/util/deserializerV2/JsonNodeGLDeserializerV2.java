@@ -21,7 +21,7 @@ public class JsonNodeGLDeserializerV2 implements KafkaRecordDeserializationSchem
     @Override
     public void deserialize(ConsumerRecord<byte[], byte[]> consumerRecord, Collector<L3StreamInput<JsonNode>> collector) throws IOException {
         long stimulus = System.nanoTime();
-        collector.collect(new L3StreamInput<>(om.readTree(new String(consumerRecord.value())), stimulus));
+        collector.collect(new L3StreamInput<>(consumerRecord.partition(), om.readTree(new String(consumerRecord.value())), stimulus));
     }
 
     @Override

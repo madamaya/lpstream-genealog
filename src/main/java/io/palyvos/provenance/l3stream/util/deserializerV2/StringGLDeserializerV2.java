@@ -13,7 +13,7 @@ public class StringGLDeserializerV2 implements KafkaRecordDeserializationSchema<
     @Override
     public void deserialize(ConsumerRecord<byte[], byte[]> consumerRecord, Collector<L3StreamInput<String>> collector) throws IOException {
         long stimulus = System.nanoTime();
-        collector.collect(new L3StreamInput<>(new String(consumerRecord.value()), stimulus));
+        collector.collect(new L3StreamInput<>(consumerRecord.partition(), new String(consumerRecord.value()), stimulus));
     }
 
     @Override
