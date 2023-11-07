@@ -504,6 +504,7 @@ public class ExperimentSettings implements Serializable {
     }
   }
 
+  /*
   public int numOfInstanceWM() {
     if (getLineageMode() == "NonLineageMode") {
       return 1;
@@ -511,8 +512,17 @@ public class ExperimentSettings implements Serializable {
       return maxParallelism();
     }
   }
+   */
 
   public int getWMnumLR(int parallelism) {
+    if (parallelism == 1) {
+      return maxParallelism();
+    } else {
+      return 1;
+    }
+  }
+
+  public int readPartitionNum(int parallelism) {
     if (parallelism == 1) {
       return maxParallelism();
     } else {

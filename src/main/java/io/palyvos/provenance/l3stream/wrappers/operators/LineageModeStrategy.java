@@ -1,10 +1,10 @@
 package io.palyvos.provenance.l3stream.wrappers.operators;
 
 import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
-import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInput;
 import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInputString;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.l3stream.wrappers.operators.lineage.*;
+import io.palyvos.provenance.l3stream.wrappers.operators.nonlineage.NonLineageWatermarkStrategy;
 import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.*;
@@ -132,7 +132,11 @@ public class LineageModeStrategy implements L3OpWrapperStrategy {
 
     @Override
     public <T> WatermarkStrategy<L3StreamTupleContainer<T>> assignTimestampsAndWatermarks(WatermarkStrategy<T> delegate, int numOfPartitions) {
-        return new LineageWatermarkStrategy<>(delegate, numOfPartitions);
+        if (numOfPartitions == 1) {
+            return new NonLineageWatermarkStrategy<>(delegate);
+        } else {
+            return new LineageWatermarkStrategy<>(delegate, numOfPartitions);
+        }
     }
 
     /*
