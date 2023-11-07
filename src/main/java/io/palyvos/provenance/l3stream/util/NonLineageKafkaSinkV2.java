@@ -13,8 +13,9 @@ import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 
 import java.util.Properties;
 
-public class NonLineageKafkaSinkV2 {
-    public static <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings) {
+public class NonLineageKafkaSinkV2 implements KafkaSinkStrategyV2 {
+    @Override
+    public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings) {
         if (settings.getLatencyFlag() == 0) {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)

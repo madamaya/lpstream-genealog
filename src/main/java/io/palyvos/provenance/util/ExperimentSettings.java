@@ -18,7 +18,10 @@ import java.lang.management.ManagementFactory;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import io.palyvos.provenance.l3stream.util.KafkaSinkStrategyV2;
 import io.palyvos.provenance.l3stream.util.L3Settings;
+import io.palyvos.provenance.l3stream.util.LineageKafkaSinkV2;
+import io.palyvos.provenance.l3stream.util.NonLineageKafkaSinkV2;
 import io.palyvos.provenance.l3stream.wrappers.operators.L3OpWrapperStrategy;
 import io.palyvos.provenance.l3stream.wrappers.operators.LineageModeStrategy;
 import io.palyvos.provenance.l3stream.wrappers.operators.NonLineageModeStrategy;
@@ -488,6 +491,13 @@ public class ExperimentSettings implements Serializable {
     return windowSize;
   }
 
+  @Parameter(names = "--invokeCpAssigner")
+  private boolean invokeCpAssigner = false;
+
+  public boolean isInvokeCpAssigner() {
+    return invokeCpAssigner;
+  }
+
   public Time assignExperimentWindowSize(Time time) {
     return Time.milliseconds(time.toMilliseconds() * windowSize);
   }
@@ -545,6 +555,14 @@ public class ExperimentSettings implements Serializable {
       return name;
     } else {
       return getLineageTopic();
+    }
+  }
+
+  public KafkaSinkStrategyV2 getKafkaSink() {
+    if (this.getLineageMode() == "NonLineageMode") {
+      return new NonLineageKafkaSinkV2();
+    } else {
+      return new LineageKafkaSinkV2();
     }
   }
 }
