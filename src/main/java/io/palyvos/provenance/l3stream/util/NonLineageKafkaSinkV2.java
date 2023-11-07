@@ -19,14 +19,14 @@ public class NonLineageKafkaSinkV2 {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
                     .setRecordSerializer(new NonLineageSerializerLatV2<>(topic))
-                    .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)
+                    .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
             //return new FlinkKafkaProducer<>(topic, new NonLineageSerializerLatV2<>(topic), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
         } else if (settings.getLatencyFlag() == 1) {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
                     .setRecordSerializer(new NonLineageSerializerV2<>(topic))
-                    .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)
+                    .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
             // return new FlinkKafkaProducer<>(topic, new NonLineageSerializerV2<>(topic), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
         } else {

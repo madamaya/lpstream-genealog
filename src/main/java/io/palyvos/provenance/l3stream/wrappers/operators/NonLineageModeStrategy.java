@@ -1,7 +1,8 @@
 package io.palyvos.provenance.l3stream.wrappers.operators;
 
 import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
-import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamInput;
+import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInput;
+import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInputString;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.l3stream.wrappers.operators.nonlineage.*;
 import io.palyvos.provenance.util.ExperimentSettings;
@@ -37,13 +38,13 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
      */
 
     @Override
-    public <T> RichMapFunction<L3StreamInput<T>, L3StreamTupleContainer<L3StreamInput<T>>> initMap(ExperimentSettings settings) {
-        return new NonLineageInitializerThV2<>(settings, 0);
+    public RichMapFunction<KafkaInputString, L3StreamTupleContainer<KafkaInputString>> initMap(ExperimentSettings settings) {
+        return new NonLineageInitializerThV2(settings, 0);
     }
 
     @Override
-    public <T> RichMapFunction<L3StreamInput<T>, L3StreamTupleContainer<L3StreamInput<T>>> initMap(ExperimentSettings settings, int sourceID) {
-        return new NonLineageInitializerThV2<>(settings, sourceID);
+    public RichMapFunction<KafkaInputString, L3StreamTupleContainer<KafkaInputString>> initMap(ExperimentSettings settings, int sourceID) {
+        return new NonLineageInitializerThV2(settings, sourceID);
     }
 
     /*

@@ -1,7 +1,8 @@
 package io.palyvos.provenance.l3stream.wrappers.operators.nonlineage;
 
 import io.palyvos.provenance.l3stream.conf.L3conf;
-import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamInput;
+import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInput;
+import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInputString;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.api.common.functions.RichMapFunction;
@@ -13,7 +14,7 @@ import java.nio.file.Paths;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
-public class NonLineageInitializerThV2<T> extends RichMapFunction<L3StreamInput<T>, L3StreamTupleContainer<L3StreamInput<T>>> {
+public class NonLineageInitializerThV2 extends RichMapFunction<KafkaInputString, L3StreamTupleContainer<KafkaInputString>> {
   long start;
   long count;
   ExperimentSettings settings;
@@ -25,8 +26,8 @@ public class NonLineageInitializerThV2<T> extends RichMapFunction<L3StreamInput<
   }
 
   @Override
-  public L3StreamTupleContainer<L3StreamInput<T>> map(L3StreamInput<T> value) throws Exception {
-    L3StreamTupleContainer<L3StreamInput<T>> out = new L3StreamTupleContainer<>(value);
+  public L3StreamTupleContainer<KafkaInputString> map(KafkaInputString value) throws Exception {
+    L3StreamTupleContainer<KafkaInputString> out = new L3StreamTupleContainer<>(value);
     // out.initGenealog(GenealogTupleType.SOURCE);
     //out.setTimestamp(System.currentTimeMillis());
     out.setStimulus(value.getStimulus());

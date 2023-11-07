@@ -512,6 +512,14 @@ public class ExperimentSettings implements Serializable {
     }
   }
 
+  public int getWMnumLR(int parallelism) {
+    if (parallelism == 1) {
+      return maxParallelism();
+    } else {
+      return 1;
+    }
+  }
+
   /*
   public String getTopicSuffix() {
     if (this.getLineageMode() == "NonLineageMode") {

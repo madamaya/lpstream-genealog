@@ -21,23 +21,20 @@ public class LineageKafkaSinkV2 {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
                     .setRecordSerializer(new LineageSerializerLatV2<>(topic, settings))
-                    .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)
+                    .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
-            // return new FlinkKafkaProducer<>(topic, new LineageSerializerLat<>(topic, settings), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
         } else if (settings.getLatencyFlag() == 1) {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
                     .setRecordSerializer(new LineageSerializerV2<>(topic, settings))
-                    .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)
+                    .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
-            // return new FlinkKafkaProducer<>(topic, new LineageSerializer<>(topic, settings), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
         } else if (settings.getLatencyFlag() == 2) {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
                     .setRecordSerializer(new LineageSerializerLinV2<>(topic, settings))
-                    .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)
+                    .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
-            // return new FlinkKafkaProducer<>(topic, new LineageSerializerLin<>(topic, settings), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
         } else {
             throw new IllegalArgumentException("LineageKafkaSink");
         }

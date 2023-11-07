@@ -1,23 +1,19 @@
 package io.palyvos.provenance.l3stream.wrappers.objects;
 
-public class L3StreamInput<T> {
+public class KafkaInput {
     private int partitionID;
     private long stimulus = Long.MIN_VALUE;
-    private T value;
 
-    public L3StreamInput(int partitionID, T value, long stimulus) {
+    public KafkaInput(int partitionID, long stimulus) {
         this.partitionID = partitionID;
-        this.value = value;
         this.stimulus = stimulus;
     }
 
-    public L3StreamInput(int partitionID, T value) {
+    public KafkaInput(int partitionID) {
         this.partitionID = partitionID;
-        this.value = value;
     }
 
-    public L3StreamInput(T value, long stimulus) {
-        this.value = value;
+    public KafkaInput(long stimulus) {
         this.stimulus = stimulus;
     }
 
@@ -35,20 +31,5 @@ public class L3StreamInput<T> {
 
     public void setStimulus(long stimulus) {
         this.stimulus = stimulus;
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return "L3StreamInput{" +
-                "value=" + value +
-                '}';
     }
 }

@@ -1,30 +1,24 @@
 package io.palyvos.provenance.l3stream.cpm;
 
-import io.palyvos.provenance.l3stream.conf.L3conf;
-import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamInput;
+import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamInputOld;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.common.state.CheckpointListener;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import redis.clients.jedis.Jedis;
 
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class CpManagerClient extends RichMapFunction<L3StreamInput<String>, Object> implements CheckpointListener {
+public class CpManagerClient extends RichMapFunction<L3StreamInputOld<String>, Object> implements CheckpointListener {
 
     public CpManagerClient() {
 
     }
 
     @Override
-    public Object map(L3StreamInput<String> jsonNodes) throws Exception {
+    public Object map(L3StreamInputOld<String> jsonNodes) throws Exception {
         return null;
     }
 
