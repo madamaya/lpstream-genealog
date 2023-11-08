@@ -28,6 +28,6 @@ public class KafkaInputString extends KafkaInput {
 
     @Override
     public String toString() {
-        return "\"" + str + "\"";
+        return str;
     }
 }
