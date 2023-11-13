@@ -91,8 +91,8 @@ public class ExperimentSettings implements Serializable {
 
   @Parameter(names = "--aggregateStrategy", converter = AggregateStrategyConverter.class, description = "strategy for handling out-of-order aggregate tuples")
   private Supplier<ProvenanceAggregateStrategy> aggregateStrategySupplier =
-      (Supplier<ProvenanceAggregateStrategy> & Serializable) SortedPointersAggregateStrategy::new;
-      // (Supplier<ProvenanceAggregateStrategy> & Serializable) UnsortedPointersAggregateStrategy::new;
+      // (Supplier<ProvenanceAggregateStrategy> & Serializable) SortedPointersAggregateStrategy::new;
+      (Supplier<ProvenanceAggregateStrategy> & Serializable) UnsortedPointersAggregateStrategy::new;
 
   @Parameter(names = "--graphEncoder", description = "output encoder for the forward-provenance graph")
   private String graphEncoder = TimestampedFileProvenanceGraphEncoder.class.getSimpleName();
