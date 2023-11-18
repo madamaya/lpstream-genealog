@@ -12,6 +12,7 @@ import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.connector.base.DeliveryGuarantee;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 
 import java.util.Properties;
 
@@ -31,8 +32,11 @@ public class LineageKafkaSinkV2 implements KafkaSinkStrategyV2 {
                     .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
         } else if (settings.getLatencyFlag() == 2) {
+            Properties props = new Properties();
+            props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 3200000);
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
+                    .setKafkaProducerConfig(props)
                     .setRecordSerializer(new LineageSerializerLinV2<>(topic, settings))
                     .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
