@@ -19,21 +19,26 @@ import java.util.Properties;
 public class LineageKafkaSinkV2 implements KafkaSinkStrategyV2 {
     @Override
     public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings) {
+        return newInstance(topic, broker, settings, new Properties());
+    }
+
+    @Override
+    public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings, Properties props) {
         if (settings.getLatencyFlag() == 0) {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
+                    .setKafkaProducerConfig(props)
                     .setRecordSerializer(new LineageSerializerLatV2<>(topic, settings))
                     .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
         } else if (settings.getLatencyFlag() == 1) {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
+                    .setKafkaProducerConfig(props)
                     .setRecordSerializer(new LineageSerializerV2<>(topic, settings))
                     .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
         } else if (settings.getLatencyFlag() == 2) {
-            Properties props = new Properties();
-            props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 3200000);
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
                     .setKafkaProducerConfig(props)
