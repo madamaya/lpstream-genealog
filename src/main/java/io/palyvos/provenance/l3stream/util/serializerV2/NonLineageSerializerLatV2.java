@@ -20,6 +20,6 @@ public class NonLineageSerializerLatV2<T> implements KafkaRecordSerializationSch
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, KafkaSinkContext kafkaSinkContext, Long aLong) {
         String latency = Long.toString(System.nanoTime() - tuple.getStimulus());
         // return new ProducerRecord<>(topic, latency.getBytes(StandardCharsets.UTF_8));
-        return new ProducerRecord<>(topic, (latency + "," + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
+        return new ProducerRecord<>(topic, (latency + "," + tuple.getStimulus() + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
     }
 }

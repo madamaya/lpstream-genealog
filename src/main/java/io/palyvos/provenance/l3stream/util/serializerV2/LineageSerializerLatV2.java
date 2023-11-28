@@ -10,6 +10,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 public class LineageSerializerLatV2<T> implements KafkaRecordSerializationSchema<L3StreamTupleContainer<T>> {
     private String topic;
@@ -23,12 +24,16 @@ public class LineageSerializerLatV2<T> implements KafkaRecordSerializationSchema
     @Nullable
     @Override
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, KafkaSinkContext kafkaSinkContext, Long aLong) {
-        String lineage = "";
+        String lineageStr = "";
+        Set lineage = null;
+        int lineageSize = 0;
         if (tuple.getLineageReliable()) {
-            lineage = FormatLineage.formattedLineage(genealogGraphTraverser.getProvenance(tuple));
+            lineage = genealogGraphTraverser.getProvenance(tuple);
+            lineageSize = lineage.size();
+            lineageStr = FormatLineage.formattedLineage(lineage);
         }
         String latency = Long.toString(System.nanoTime() - tuple.getStimulus());
-        // return new ProducerRecord<>(topic, latency.getBytes(StandardCharsets.UTF_8));
-        return new ProducerRecord<>(topic, (latency + "," + tuple.tuple() + "," + lineage).getBytes(StandardCharsets.UTF_8));
+
+        return new ProducerRecord<>(topic, (latency + "," + tuple.getStimulus() + ", Lineage(" + lineageSize + ")" + lineageStr + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
     }
 }
