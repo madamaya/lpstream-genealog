@@ -12,7 +12,7 @@ public class StringDeserializerV2 implements KafkaRecordDeserializationSchema<Ka
     @Override
     public void deserialize(ConsumerRecord<byte[], byte[]> consumerRecord, Collector<KafkaInputString> collector) throws IOException {
         long stimulus = System.nanoTime();
-        collector.collect(new KafkaInputString(consumerRecord.partition(), new String(consumerRecord.value()), stimulus));
+        collector.collect(new KafkaInputString(consumerRecord.partition(), new String(consumerRecord.value()), consumerRecord.timestamp(), stimulus));
     }
 
     @Override

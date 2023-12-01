@@ -3,18 +3,18 @@ package io.palyvos.provenance.l3stream.wrappers.objects;
 public class KafkaInputString extends KafkaInput {
     private String str;
 
-    public KafkaInputString(int partitionID, String str, long stimulus) {
-        super(partitionID, stimulus);
+    public KafkaInputString(int partitionID, String str, long kafkaAppandTime, long stimulus) {
+        super(partitionID, kafkaAppandTime, stimulus);
         this.str = str;
     }
 
-    public KafkaInputString(int partitionID, String str) {
-        super(partitionID);
+    public KafkaInputString(int partitionID, String str, long kafkaAppandTime) {
+        super(partitionID, kafkaAppandTime);
         this.str = str;
     }
 
-    public KafkaInputString(String str, long stimulus) {
-        super(stimulus);
+    public KafkaInputString(String str, long kafkaAppandTime, long stimulus) {
+        super(kafkaAppandTime, stimulus);
         this.str = str;
     }
 

@@ -11,12 +11,12 @@ public class KafkaInputJsonNode extends KafkaInput {
     }
 
     public KafkaInputJsonNode(int partitionID, JsonNode jsonNode) {
-        super(partitionID);
+        super(partitionID, Long.MIN_VALUE);
         this.jsonNode = jsonNode;
     }
 
     public KafkaInputJsonNode(JsonNode jsonNode, long stimulus) {
-        super(stimulus);
+        super(Long.MIN_VALUE, stimulus);
         this.jsonNode = jsonNode;
     }
 
