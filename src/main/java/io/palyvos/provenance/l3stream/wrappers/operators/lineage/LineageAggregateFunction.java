@@ -34,7 +34,10 @@ public class LineageAggregateFunction<IN, ACC, OUT>
     accumulator.getStrategy().addWindowProvenance(value);
     accumulator.updateLineageReliable(value.getLineageReliable());
     accumulator.updateTimestamp(value.getTimestamp());
-    accumulator.updateStimulus(value.getStimulus());
+    if (accumulator.getStimulusList() == null || accumulator.getStimulusList().get(0) < value.getStimulusList().get(0)) {
+      accumulator.setStimulus(System.currentTimeMillis());
+      accumulator.setStimulusList(value.getStimulusList());
+    }
     accumulator.setAccumulator(delegate.add(value.tuple(), accumulator.getAccumulator()));
     return accumulator;
   }
@@ -46,7 +49,10 @@ public class LineageAggregateFunction<IN, ACC, OUT>
     accumulator.getStrategy().annotateWindowResult(genealogResult);
     genealogResult.setLineageReliable(accumulator.isLineageReliable());
     genealogResult.setTimestamp(accumulator.getTimestamp());
-    genealogResult.setStimulus(accumulator.getStimulus());
+    //genealogResult.setStimulus(accumulator.getStimulus());
+    genealogResult.setStimulusList(accumulator.getStimulusList());
+    genealogResult.setStimulusList(accumulator.getStimulus());
+    genealogResult.setStimulusList(System.currentTimeMillis());
     return genealogResult;
   }
 

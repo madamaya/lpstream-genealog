@@ -1,5 +1,6 @@
 package io.palyvos.provenance.util;
 
+import java.util.List;
 import java.util.Objects;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
@@ -8,6 +9,7 @@ public class BaseTuple implements TimestampedTuple {
   protected long timestamp;
   protected long stimulus;
   protected String key;
+  private List<Long> stimulusList;
 
   public BaseTuple() {}
 
@@ -67,6 +69,18 @@ public class BaseTuple implements TimestampedTuple {
   @Override
   public int hashCode() {
     return Objects.hash(timestamp, stimulus, key);
+  }
+
+  public List<Long> getStimulusList() {
+    return stimulusList;
+  }
+
+  public void setStimulusList(List<Long> stimulusList) {
+    this.stimulusList = stimulusList;
+  }
+
+  public void setStimulusList(long stimulus) {
+    this.stimulusList.add(stimulus);
   }
 
   @Override

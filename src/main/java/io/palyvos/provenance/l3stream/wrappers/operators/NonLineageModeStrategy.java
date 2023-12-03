@@ -105,12 +105,14 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
 
     @Override
     public <T, O> FlatMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> flatMap(FlatMapFunction<T, O> delegate) {
-        return new NonLineageFlatMapFunction<>(delegate);
+        // return new NonLineageFlatMapFunction<>(delegate);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <T, O> RichFlatMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> flatMap(RichFlatMapFunction<T, O> delegate) {
-        return new NonLineageRichFlatMapFunction<>(delegate);
+        // return new NonLineageRichFlatMapFunction<>(delegate);
+        throw new UnsupportedOperationException();
     }
 
     @Override

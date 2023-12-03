@@ -3,6 +3,7 @@ package io.palyvos.provenance.l3stream.wrappers.operators;
 import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
 
 import java.io.Serializable;
+import java.util.List;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 public class GenealogAccumulator<T> implements Serializable {
@@ -10,12 +11,14 @@ public class GenealogAccumulator<T> implements Serializable {
     T accumulator;
     private long timestamp;
     private long stimulus;
+    private List<Long> stimulusList;
     private boolean lineageReliable;
 
     public GenealogAccumulator(ProvenanceAggregateStrategy strategy, T accumulator, boolean lineageReliable) {
         this.strategy = strategy;
         this.accumulator = accumulator;
         this.lineageReliable = lineageReliable;
+        stimulusList = null;
     }
 
     public ProvenanceAggregateStrategy getStrategy() {
@@ -44,6 +47,18 @@ public class GenealogAccumulator<T> implements Serializable {
 
     public long getStimulus() {
         return stimulus;
+    }
+
+    public void setStimulus(long stimulus) {
+        this.stimulus = stimulus;
+    }
+
+    public List<Long> getStimulusList() {
+        return this.stimulusList;
+    }
+
+    public void setStimulusList(List<Long> stimulusList) {
+        this.stimulusList = stimulusList;
     }
 
     public void updateLineageReliable(boolean lineageReliable) {

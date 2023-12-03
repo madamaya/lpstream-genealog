@@ -11,6 +11,8 @@ import org.apache.flink.configuration.Configuration;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
@@ -27,11 +29,17 @@ public class NonLineageInitializerThV2 extends RichMapFunction<KafkaInputString,
 
   @Override
   public L3StreamTupleContainer<KafkaInputString> map(KafkaInputString value) throws Exception {
+    long ts = System.currentTimeMillis();
     L3StreamTupleContainer<KafkaInputString> out = new L3StreamTupleContainer<>(value);
     // out.initGenealog(GenealogTupleType.SOURCE);
     //out.setTimestamp(System.currentTimeMillis());
     // out.setStimulus(value.getStimulus());
-    out.setStimulus(value.getKafkaAppandTime());
+    // out.setStimulus(value.getKafkaAppandTime());
+    List<Long> stimulusList = new ArrayList<>();
+    stimulusList.add(value.getKafkaAppandTime());
+    stimulusList.add(value.getStimulus());
+    stimulusList.add(ts);
+    out.setStimulusList(stimulusList);
     count++;
     return out;
   }

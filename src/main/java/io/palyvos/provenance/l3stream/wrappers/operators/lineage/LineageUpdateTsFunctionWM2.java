@@ -33,10 +33,14 @@ public class LineageUpdateTsFunctionWM2<T>
 
   @Override
   public L3StreamTupleContainer<T> map(L3StreamTupleContainer<T> value) throws Exception {
+    long ts = System.currentTimeMillis();
     L3StreamTupleContainer<T> genealogResult = new L3StreamTupleContainer<>(value.tuple());
     GenealogMapHelper.INSTANCE.annotateResult(value, genealogResult);
     genealogResult.setLineageReliable(value.getLineageReliable());
-    genealogResult.copyTimes(value);
+    // genealogResult.copyTimes(value);
+    genealogResult.setTimestamp(value.getTimestamp());
+    genealogResult.setStimulusList(value.getStimulusList());
+    genealogResult.setStimulusList(ts);
     genealogResult.setTimestamp(tsAssigner.extractTimestamp(value.tuple(), -1));
     genealogResult.setPartitionId(value.getPartitionId());
     return genealogResult;

@@ -40,18 +40,25 @@ public class NonLineageAggregateFunction<IN, ACC, OUT>
       L3StreamTupleContainer<IN> value, GenealogAccumulator<ACC> accumulator) {
     // accumulator.strategy.addWindowProvenance(value);
     accumulator.updateTimestamp(value.getTimestamp());
-    accumulator.updateStimulus(value.getStimulus());
+    if (accumulator.getStimulusList() == null || accumulator.getStimulusList().get(0) < value.getStimulusList().get(0)) {
+      accumulator.setStimulus(System.currentTimeMillis());
+      accumulator.setStimulusList(value.getStimulusList());
+    }
     accumulator.setAccumulator(delegate.add(value.tuple(), accumulator.getAccumulator()));
     return accumulator;
   }
 
   @Override
   public L3StreamTupleContainer<OUT> getResult(GenealogAccumulator<ACC> accumulator) {
+    long ts = System.currentTimeMillis();
     OUT result = delegate.getResult(accumulator.getAccumulator());
     L3StreamTupleContainer<OUT> genealogResult = new L3StreamTupleContainer<>(result);
     // accumulator.strategy.annotateWindowResult(genealogResult);
     genealogResult.setTimestamp(accumulator.getTimestamp());
-    genealogResult.setStimulus(accumulator.getStimulus());
+    //genealogResult.setStimulus(accumulator.getStimulus());
+    genealogResult.setStimulusList(accumulator.getStimulusList());
+    genealogResult.setStimulusList(accumulator.getStimulus());
+    genealogResult.setStimulusList(ts);
     return genealogResult;
   }
 

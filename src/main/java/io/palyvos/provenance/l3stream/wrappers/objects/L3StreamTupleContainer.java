@@ -3,6 +3,8 @@ package io.palyvos.provenance.l3stream.wrappers.objects;
 import io.palyvos.provenance.genealog.GenealogData;
 import io.palyvos.provenance.genealog.GenealogTupleType;
 
+import java.util.List;
+
 public class L3StreamTupleContainer<T> implements L3StreamTuple {
 
     private GenealogData genealogData;
@@ -12,6 +14,7 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
     private boolean lineageReliable;
     private long checkpointId;
     private final T tuple;
+    private List<Long> stimulusList;
 
     public L3StreamTupleContainer(T tuple) {
         this.tuple = tuple;
@@ -107,5 +110,20 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
     @Override
     public String toString() {
         return tuple.toString();
+    }
+
+    @Override
+    public List<Long> getStimulusList() {
+        return this.stimulusList;
+    }
+
+    @Override
+    public void setStimulusList(List<Long> stimulusList) {
+        this.stimulusList = stimulusList;
+    }
+
+    @Override
+    public void setStimulusList(long stimulus) {
+        this.stimulusList.add(stimulus);
     }
 }

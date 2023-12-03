@@ -31,8 +31,9 @@ public class LineageProcessJoinFunction<IN1, IN2, OUT> extends
       L3StreamTupleContainer<IN2> right,
       ProcessJoinFunction<L3StreamTupleContainer<IN1>, L3StreamTupleContainer<IN2>, L3StreamTupleContainer<OUT>>.Context ctx,
       Collector<L3StreamTupleContainer<OUT>> out) throws Exception {
+    long ts = System.currentTimeMillis();
     delegate.processElement(left.tuple(), right.tuple(),
-        (ProcessJoinFunction<IN1, IN2, OUT>.Context) ctx, new CollectorAdapter<>(left, right, out));
+        (ProcessJoinFunction<IN1, IN2, OUT>.Context) ctx, new CollectorAdapter<>(left, right, out, ts));
   }
 
 
@@ -41,12 +42,14 @@ public class LineageProcessJoinFunction<IN1, IN2, OUT> extends
     private final L3StreamTupleContainer<T1> left;
     private final L3StreamTupleContainer<T2> right;
     private final Collector<L3StreamTupleContainer<O>> delegate;
+    private final long ts;
 
     public CollectorAdapter(L3StreamTupleContainer<T1> left, L3StreamTupleContainer<T2> right,
-        Collector<L3StreamTupleContainer<O>> delegate) {
+        Collector<L3StreamTupleContainer<O>> delegate, long ts) {
       this.left = left;
       this.right = right;
       this.delegate = delegate;
+      this.ts = ts;
     }
 
     @Override
@@ -54,7 +57,19 @@ public class LineageProcessJoinFunction<IN1, IN2, OUT> extends
       L3StreamTupleContainer<O> genealogResult = new L3StreamTupleContainer<>(record);
       GenealogJoinHelper.INSTANCE.annotateResult(left, right, genealogResult);
       genealogResult.setLineageReliable(left.getGenealogData() != null && right.getGenealogData() != null && left.getLineageReliable() && right.getLineageReliable());
-      genealogResult.copyTimes(left, right);
+      // genealogResult.copyTimes(first, second);
+      if (left.getTimestamp() >= right.getTimestamp()) {
+        genealogResult.setTimestamp(left.getTimestamp());
+      } else {
+        genealogResult.setTimestamp(right.getTimestamp());
+      }
+
+      if (left.getStimulusList().get(0) >= right.getStimulusList().get(0)) {
+        genealogResult.setStimulusList(left.getStimulusList());
+      } else {
+        genealogResult.setStimulusList(right.getStimulusList());
+      }
+      genealogResult.setStimulusList(ts);
       delegate.collect(genealogResult);
     }
 

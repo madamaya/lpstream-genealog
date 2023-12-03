@@ -2,6 +2,7 @@ package io.palyvos.provenance.l3stream.util.serializerV2;
 
 import io.palyvos.provenance.genealog.GenealogGraphTraverser;
 import io.palyvos.provenance.l3stream.util.FormatLineage;
+import io.palyvos.provenance.l3stream.util.FormatStimulusList;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
@@ -24,6 +25,7 @@ public class LineageSerializerLatV2<T> implements KafkaRecordSerializationSchema
     @Nullable
     @Override
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, KafkaSinkContext kafkaSinkContext, Long aLong) {
+        long ts = System.currentTimeMillis();
         String lineageStr = "";
         Set lineage = null;
         int lineageSize = 0;
@@ -32,8 +34,8 @@ public class LineageSerializerLatV2<T> implements KafkaRecordSerializationSchema
             lineageSize = lineage.size();
             lineageStr = FormatLineage.formattedLineage(lineage);
         }
-        String latency = Long.toString(System.nanoTime() - tuple.getStimulus());
+        tuple.setStimulusList(ts);
 
-        return new ProducerRecord<>(topic, (latency + "," + tuple.getStimulus() + ", Lineage(" + lineageSize + ")" + lineageStr + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
+        return new ProducerRecord<>(topic, (FormatStimulusList.formatStimulusList(tuple.getStimulusList()) + "," + tuple.getStimulus() + ", Lineage(" + lineageSize + ")" + lineageStr + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
     }
 }

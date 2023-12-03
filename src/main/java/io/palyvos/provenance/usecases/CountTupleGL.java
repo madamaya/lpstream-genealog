@@ -4,6 +4,10 @@ import io.palyvos.provenance.genealog.GenealogData;
 import io.palyvos.provenance.genealog.GenealogTuple;
 import io.palyvos.provenance.genealog.GenealogTupleType;
 
+import java.util.List;
+
+/* Modifications copyright (C) 2023 Masaya Yamada */
+
 public class CountTupleGL extends CountTuple implements GenealogTuple {
 
   private GenealogData gdata;
@@ -68,4 +72,18 @@ public class CountTupleGL extends CountTuple implements GenealogTuple {
     return gdata;
   }
 
+  @Override
+  public List<Long> getStimulusList() {
+    return super.getStimulusList();
+  }
+
+  @Override
+  public void setStimulusList(List<Long> stimulusList) {
+    super.setStimulusList(stimulusList);
+  }
+
+  @Override
+  public void setStimulusList(long stimulus) {
+    super.setStimulusList(stimulus);
+  }
 }

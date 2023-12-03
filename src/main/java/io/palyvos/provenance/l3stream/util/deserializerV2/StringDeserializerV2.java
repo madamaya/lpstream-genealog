@@ -11,7 +11,7 @@ import java.io.IOException;
 public class StringDeserializerV2 implements KafkaRecordDeserializationSchema<KafkaInputString> {
     @Override
     public void deserialize(ConsumerRecord<byte[], byte[]> consumerRecord, Collector<KafkaInputString> collector) throws IOException {
-        long stimulus = System.nanoTime();
+        long stimulus = System.currentTimeMillis();
         collector.collect(new KafkaInputString(consumerRecord.partition(), new String(consumerRecord.value()), consumerRecord.timestamp(), stimulus));
     }
 

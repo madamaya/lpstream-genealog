@@ -17,11 +17,15 @@ public class LineageMapFunction<T, O>
 
   @Override
   public L3StreamTupleContainer<O> map(L3StreamTupleContainer<T> value) throws Exception {
+    long ts = System.currentTimeMillis();
     O result = delegate.map(value.tuple());
     L3StreamTupleContainer<O> genealogResult = new L3StreamTupleContainer<>(result);
     GenealogMapHelper.INSTANCE.annotateResult(value, genealogResult);
     genealogResult.setLineageReliable(value.getLineageReliable());
-    genealogResult.copyTimes(value);
+    // genealogResult.copyTimes(value);
+    genealogResult.setTimestamp(value.getTimestamp());
+    genealogResult.setStimulusList(value.getStimulusList());
+    genealogResult.setStimulusList(ts);
     genealogResult.setPartitionId(value.getPartitionId());
     return genealogResult;
   }

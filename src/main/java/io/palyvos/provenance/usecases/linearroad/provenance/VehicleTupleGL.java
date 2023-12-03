@@ -5,6 +5,10 @@ import io.palyvos.provenance.genealog.GenealogTuple;
 import io.palyvos.provenance.genealog.GenealogTupleType;
 import io.palyvos.provenance.usecases.linearroad.noprovenance.VehicleTuple;
 
+import java.util.List;
+
+/* Modifications copyright (C) 2023 Masaya Yamada */
+
 public class VehicleTupleGL extends
     VehicleTuple implements GenealogTuple {
 
@@ -75,5 +79,20 @@ public class VehicleTupleGL extends
   @Override
   public String toString() {
     return super.toString();
+  }
+
+  @Override
+  public List<Long> getStimulusList() {
+    return super.getStimulusList();
+  }
+
+  @Override
+  public void setStimulusList(List<Long> stimulusList) {
+    super.setStimulusList(stimulusList);
+  }
+
+  @Override
+  public void setStimulusList(long stimulus) {
+    super.setStimulusList(stimulus);
   }
 }

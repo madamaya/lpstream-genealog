@@ -4,6 +4,8 @@ import io.palyvos.provenance.genealog.GenealogData;
 import io.palyvos.provenance.genealog.GenealogTuple;
 import io.palyvos.provenance.genealog.GenealogTupleType;
 import io.palyvos.provenance.usecases.linearroad.noprovenance.LinearRoadInputTuple;
+
+import java.util.List;
 import java.util.regex.Pattern;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
@@ -15,6 +17,11 @@ public class LinearRoadInputTupleGL extends
 
   protected LinearRoadInputTupleGL(String[] readings) {
     super(readings);
+  }
+
+  public LinearRoadInputTupleGL(int type, long time, int vid, int speed, int xway, int lane,
+                                int dir, int seg, int pos) {
+    super(type, time, vid, speed, xway, lane, dir, seg, pos);
   }
 
   public LinearRoadInputTupleGL(int type, long time, int vid, int speed, int xway, int lane,
@@ -94,5 +101,21 @@ public class LinearRoadInputTupleGL extends
   @Override
   public String toString() {
     return super.toString();
+  }
+
+
+  @Override
+  public List<Long> getStimulusList() {
+    return super.getStimulusList();
+  }
+
+  @Override
+  public void setStimulusList(List<Long> stimulusList) {
+    super.setStimulusList(stimulusList);
+  }
+
+  @Override
+  public void setStimulusList(long stimulus) {
+    super.setStimulusList(stimulus);
   }
 }

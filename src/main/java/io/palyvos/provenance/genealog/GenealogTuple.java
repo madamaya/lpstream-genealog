@@ -3,6 +3,9 @@ package io.palyvos.provenance.genealog;
 import io.palyvos.provenance.util.TimestampedUIDTuple;
 import io.palyvos.provenance.ananke.functions.ProvenanceTupleContainer;
 import java.util.Collection;
+import java.util.List;
+
+/* Modifications copyright (C) 2023 Masaya Yamada */
 
 /**
  * Interface that needs to be implemented by Genealog-compatible tuples. <br>
@@ -68,6 +71,17 @@ public interface GenealogTuple extends TimestampedUIDTuple {
     getGenealogData().setUID(uid);
   }
 
+  default List<Long> getStimulusList() {
+    throw new UnsupportedOperationException();
+  }
+
+  default void setStimulusList(List<Long> stimulusList) {
+    throw new UnsupportedOperationException();
+  }
+
+  default void setStimulusList(long stimulus) {
+    throw new UnsupportedOperationException();
+  }
   default Collection<TimestampedUIDTuple> getProvenance() {
     return getGenealogData().getProvenance();
   }

@@ -105,12 +105,14 @@ public class LineageModeStrategy implements L3OpWrapperStrategy {
 
     @Override
     public <T, O> FlatMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> flatMap(FlatMapFunction<T, O> delegate) {
-        return new LineageFlatMapFunction<>(delegate);
+        // return new LineageFlatMapFunction<>(delegate);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <T, O> RichFlatMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> flatMap(RichFlatMapFunction<T, O> delegate) {
-        return new LineageRichFlatMapFunction<>(delegate);
+        // return new LineageRichFlatMapFunction<>(delegate);
+        throw new UnsupportedOperationException();
     }
 
     @Override
