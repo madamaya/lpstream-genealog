@@ -52,36 +52,17 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
 
     public void copyTimesTFL(L3StreamTupleContainer value1, L3StreamTupleContainer value2) {
         this.timestamp = Math.max(value1.getTimestamp(), value2.getTimestamp());
-        if (value1.getTfl().ts1 > value2.getTfl().ts1) {
+        if (value1.getTfl().ts2 >= value2.getTfl().ts2) {
+            long tmp = Math.max(value1.getTfl().ts1, value2.getTfl().ts1);
             this.tfl = value1.getTfl();
-            if (value1.getTfl().ts2 < value2.getTfl().ts2) {
-                TimestampsForLatency tmp = value2.getTfl();
-                this.tfl.setTs2(tmp.ts2);
-                this.tfl.setTs3(tmp.ts3);
-                this.tfl.setTs4(tmp.ts4);
-                this.tfl.setTs5(tmp.ts5);
-                this.tfl.setTs6(tmp.ts6);
-                this.tfl.setTs7(tmp.ts7);
-                this.tfl.setTs8(tmp.ts8);
-                this.tfl.setTs9(tmp.ts9);
-                this.tfl.setTs10(tmp.ts10);
-            }
-        } else {
+            this.tfl.setTs1(tmp);
+        } else if (value1.getTfl().ts2 < value2.getTfl().ts2) {
+            long tmp = Math.max(value1.getTfl().ts1, value2.getTfl().ts1);
             this.tfl = value2.getTfl();
-            if (value1.getTfl().ts2 > value2.getTfl().ts2) {
-                TimestampsForLatency tmp = value1.getTfl();
-                this.tfl.setTs2(tmp.ts2);
-                this.tfl.setTs3(tmp.ts3);
-                this.tfl.setTs4(tmp.ts4);
-                this.tfl.setTs5(tmp.ts5);
-                this.tfl.setTs6(tmp.ts6);
-                this.tfl.setTs7(tmp.ts7);
-                this.tfl.setTs8(tmp.ts8);
-                this.tfl.setTs9(tmp.ts9);
-                this.tfl.setTs10(tmp.ts10);
-            }
+            this.tfl.setTs1(tmp);
+        } else {
+            throw new IllegalStateException();
         }
-
     }
 
     @Override

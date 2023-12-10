@@ -57,18 +57,14 @@ public class GenealogAccumulator<T> implements Serializable {
         if (this.tfl == null) {
             this.tfl = tfl;
         } else {
-            this.tfl.setTs1(Math.max(this.tfl.ts1, tfl.ts1));
-            if (this.tfl.ts2 < tfl.ts2) {
-                this.tfl.setTs2(tfl.ts2);
-                this.tfl.setTs3(tfl.ts2);
-                this.tfl.setTs4(tfl.ts2);
-                this.tfl.setTs5(tfl.ts2);
-                this.tfl.setTs6(tfl.ts2);
-                this.tfl.setTs7(tfl.ts2);
-                this.tfl.setTs8(tfl.ts2);
-                this.tfl.setTs9(tfl.ts2);
-                this.tfl.setTs10(tfl.ts2);
-                this.tfl.setCount(tfl.getCount());
+            if (this.tfl.ts2 >= tfl.ts2) {
+                this.tfl.setTs1(Math.max(this.tfl.ts1, tfl.ts1));
+            } else if (this.tfl.ts2 < tfl.ts2) {
+                long tmp = Math.max(this.tfl.ts1, tfl.ts1);
+                this.tfl = tfl;
+                this.tfl.setTs1(tmp);
+            } else {
+                throw new IllegalStateException();
             }
         }
     }
