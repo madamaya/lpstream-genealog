@@ -36,7 +36,7 @@ public class LineageUpdateTsFunctionWM2<T>
     L3StreamTupleContainer<T> genealogResult = new L3StreamTupleContainer<>(value.tuple());
     GenealogMapHelper.INSTANCE.annotateResult(value, genealogResult);
     genealogResult.setLineageReliable(value.getLineageReliable());
-    genealogResult.copyTimes(value);
+    genealogResult.copyTimesTFL(value);
     genealogResult.setTimestamp(tsAssigner.extractTimestamp(value.tuple(), -1));
     genealogResult.setPartitionId(value.getPartitionId());
     return genealogResult;

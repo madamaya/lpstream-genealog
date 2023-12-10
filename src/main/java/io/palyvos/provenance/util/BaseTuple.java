@@ -1,5 +1,8 @@
 package io.palyvos.provenance.util;
 
+import io.palyvos.provenance.l3stream.util.object.TimestampsForLatency;
+import org.apache.flink.api.java.tuple.Tuple2;
+
 import java.util.Objects;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
@@ -7,6 +10,7 @@ public class BaseTuple implements TimestampedTuple {
 
   protected long timestamp;
   protected long stimulus;
+  protected TimestampsForLatency tfl;
   protected String key;
 
   public BaseTuple() {}
@@ -40,6 +44,14 @@ public class BaseTuple implements TimestampedTuple {
   @Override
   public void setStimulus(long stimulus) {
     this.stimulus = stimulus;
+  }
+
+  public TimestampsForLatency getTfl() {
+    return tfl;
+  }
+
+  public void setTfl(TimestampsForLatency tfl) {
+    this.tfl = tfl;
   }
 
   public String getKey() {

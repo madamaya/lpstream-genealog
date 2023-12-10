@@ -2,12 +2,15 @@ package io.palyvos.provenance.l3stream.wrappers.objects;
 
 import io.palyvos.provenance.genealog.GenealogData;
 import io.palyvos.provenance.genealog.GenealogTupleType;
+import io.palyvos.provenance.l3stream.util.object.TimestampsForLatency;
+import org.apache.flink.api.java.tuple.Tuple2;
 
 public class L3StreamTupleContainer<T> implements L3StreamTuple {
 
     private GenealogData genealogData;
     private long partitionId;
     private long latencyTs;
+    private TimestampsForLatency tfl;
     private long timestamp;
     private boolean lineageReliable;
     private long checkpointId;
@@ -37,9 +40,48 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
         this.latencyTs = value.getStimulus();
     }
 
+    public void copyTimesTFL(L3StreamTupleContainer value) {
+        this.timestamp = value.getTimestamp();
+        this.tfl = value.getTfl();
+    }
+
     public void copyTimes(L3StreamTupleContainer value1, L3StreamTupleContainer value2) {
         this.timestamp = Math.max(value1.getTimestamp(), value2.getTimestamp());
         this.latencyTs = Math.max(value1.getStimulus(), value2.getStimulus());
+    }
+
+    public void copyTimesTFL(L3StreamTupleContainer value1, L3StreamTupleContainer value2) {
+        this.timestamp = Math.max(value1.getTimestamp(), value2.getTimestamp());
+        if (value1.getTfl().ts1 > value2.getTfl().ts1) {
+            this.tfl = value1.getTfl();
+            if (value1.getTfl().ts2 < value2.getTfl().ts2) {
+                TimestampsForLatency tmp = value2.getTfl();
+                this.tfl.setTs2(tmp.ts2);
+                this.tfl.setTs3(tmp.ts3);
+                this.tfl.setTs4(tmp.ts4);
+                this.tfl.setTs5(tmp.ts5);
+                this.tfl.setTs6(tmp.ts6);
+                this.tfl.setTs7(tmp.ts7);
+                this.tfl.setTs8(tmp.ts8);
+                this.tfl.setTs9(tmp.ts9);
+                this.tfl.setTs10(tmp.ts10);
+            }
+        } else {
+            this.tfl = value2.getTfl();
+            if (value1.getTfl().ts2 > value2.getTfl().ts2) {
+                TimestampsForLatency tmp = value1.getTfl();
+                this.tfl.setTs2(tmp.ts2);
+                this.tfl.setTs3(tmp.ts3);
+                this.tfl.setTs4(tmp.ts4);
+                this.tfl.setTs5(tmp.ts5);
+                this.tfl.setTs6(tmp.ts6);
+                this.tfl.setTs7(tmp.ts7);
+                this.tfl.setTs8(tmp.ts8);
+                this.tfl.setTs9(tmp.ts9);
+                this.tfl.setTs10(tmp.ts10);
+            }
+        }
+
     }
 
     @Override
@@ -103,6 +145,16 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
         this.latencyTs = stimulus;
     }
 
+
+    @Override
+    public TimestampsForLatency getTfl() {
+        return tfl;
+    }
+
+    @Override
+    public void setTfl(TimestampsForLatency tfl) {
+        this.tfl = tfl;
+    }
 
     @Override
     public String toString() {

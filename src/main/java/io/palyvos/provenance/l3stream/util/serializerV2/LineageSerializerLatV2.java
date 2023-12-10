@@ -27,13 +27,16 @@ public class LineageSerializerLatV2<T> implements KafkaRecordSerializationSchema
         String lineageStr = "";
         Set lineage = null;
         int lineageSize = 0;
+        long ts1 = System.nanoTime();
         if (tuple.getLineageReliable()) {
             lineage = genealogGraphTraverser.getProvenance(tuple);
             lineageSize = lineage.size();
             lineageStr = FormatLineage.formattedLineage(lineage);
         }
-        String latency = Long.toString(System.nanoTime() - tuple.getStimulus());
+        long ts2 = System.nanoTime();
+        tuple.getTfl().setNewTimestamp(ts2 - ts1);
+        String latency = Long.toString(ts2 - tuple.getTfl().ts2);
 
-        return new ProducerRecord<>(topic, (latency + "," + tuple.getStimulus() + ", Lineage(" + lineageSize + ")" + lineageStr + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
+        return new ProducerRecord<>(topic, (tuple.getTfl().ts1 + "," + latency + "," + tuple.getTfl() + ", Lineage(" + lineageSize + ")" + lineageStr + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
     }
 }

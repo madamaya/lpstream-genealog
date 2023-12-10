@@ -3,10 +3,17 @@ package io.palyvos.provenance.usecases;
 import io.palyvos.provenance.genealog.GenealogData;
 import io.palyvos.provenance.genealog.GenealogTuple;
 import io.palyvos.provenance.genealog.GenealogTupleType;
+import io.palyvos.provenance.l3stream.util.object.TimestampsForLatency;
+import org.apache.flink.api.java.tuple.Tuple2;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class CountTupleGL extends CountTuple implements GenealogTuple {
 
   private GenealogData gdata;
+
+  public CountTupleGL(long timestamp, String key, long count) {
+    super(timestamp, key, count);
+  }
 
   public CountTupleGL(long timestamp, String key, long stimulus, long count) {
     super(timestamp, key, stimulus, count);
@@ -68,4 +75,13 @@ public class CountTupleGL extends CountTuple implements GenealogTuple {
     return gdata;
   }
 
+  @Override
+  public TimestampsForLatency getTfl() {
+    return super.getTfl();
+  }
+
+  @Override
+  public void setTfl(TimestampsForLatency tfl) {
+    super.setTfl(tfl);
+  }
 }

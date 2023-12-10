@@ -1,11 +1,13 @@
 package io.palyvos.provenance.l3stream.wrappers.operators.nonlineage;
 
 import io.palyvos.provenance.l3stream.conf.L3conf;
+import io.palyvos.provenance.l3stream.util.object.TimestampsForLatency;
 import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInput;
 import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInputString;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.api.common.functions.RichMapFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 
 import java.io.PrintWriter;
@@ -31,7 +33,8 @@ public class NonLineageInitializerThV2 extends RichMapFunction<KafkaInputString,
     // out.initGenealog(GenealogTupleType.SOURCE);
     //out.setTimestamp(System.currentTimeMillis());
     // out.setStimulus(value.getStimulus());
-    out.setStimulus(value.getKafkaAppandTime());
+    // out.setStimulus(value.getKafkaAppandTime());
+    out.setTfl(new TimestampsForLatency(value.getKafkaAppandTime(), value.getStimulus()));
     count++;
     return out;
   }

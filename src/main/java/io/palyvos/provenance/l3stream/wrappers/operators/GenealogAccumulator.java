@@ -1,6 +1,8 @@
 package io.palyvos.provenance.l3stream.wrappers.operators;
 
 import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
+import io.palyvos.provenance.l3stream.util.object.TimestampsForLatency;
+import org.apache.flink.api.java.tuple.Tuple2;
 
 import java.io.Serializable;
 
@@ -10,6 +12,7 @@ public class GenealogAccumulator<T> implements Serializable {
     T accumulator;
     private long timestamp;
     private long stimulus;
+    private TimestampsForLatency tfl;
     private boolean lineageReliable;
 
     public GenealogAccumulator(ProvenanceAggregateStrategy strategy, T accumulator, boolean lineageReliable) {
@@ -44,6 +47,30 @@ public class GenealogAccumulator<T> implements Serializable {
 
     public long getStimulus() {
         return stimulus;
+    }
+
+    public TimestampsForLatency getTfl() {
+        return tfl;
+    }
+
+    public void setTfl(TimestampsForLatency tfl) {
+        if (this.tfl == null) {
+            this.tfl = tfl;
+        } else {
+            this.tfl.setTs1(Math.max(this.tfl.ts1, tfl.ts1));
+            if (this.tfl.ts2 < tfl.ts2) {
+                this.tfl.setTs2(tfl.ts2);
+                this.tfl.setTs3(tfl.ts2);
+                this.tfl.setTs4(tfl.ts2);
+                this.tfl.setTs5(tfl.ts2);
+                this.tfl.setTs6(tfl.ts2);
+                this.tfl.setTs7(tfl.ts2);
+                this.tfl.setTs8(tfl.ts2);
+                this.tfl.setTs9(tfl.ts2);
+                this.tfl.setTs10(tfl.ts2);
+                this.tfl.setCount(tfl.getCount());
+            }
+        }
     }
 
     public void updateLineageReliable(boolean lineageReliable) {

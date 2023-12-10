@@ -29,7 +29,7 @@ public class LineageRichMapFunction<T, O>
     L3StreamTupleContainer<O> genealogResult = new L3StreamTupleContainer<>(result);
     GenealogMapHelper.INSTANCE.annotateResult(value, genealogResult);
     genealogResult.setLineageReliable(value.getLineageReliable());
-    genealogResult.copyTimes(value);
+    genealogResult.copyTimesTFL(value);
     genealogResult.setPartitionId(value.getPartitionId());
     return genealogResult;
   }

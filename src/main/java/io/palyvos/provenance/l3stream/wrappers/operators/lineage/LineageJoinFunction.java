@@ -23,7 +23,7 @@ public class LineageJoinFunction<IN1, IN2, OUT>
     L3StreamTupleContainer<OUT> genealogResult = new L3StreamTupleContainer<>(result);
     GenealogJoinHelper.INSTANCE.annotateResult(first, second, genealogResult);
     genealogResult.setLineageReliable(first.getGenealogData() != null && second.getGenealogData() != null && first.getLineageReliable() && second.getLineageReliable());
-    genealogResult.copyTimes(first, second);
+    genealogResult.copyTimesTFL(first, second);
     return genealogResult;
   }
 }

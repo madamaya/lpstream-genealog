@@ -54,7 +54,7 @@ public class LineageProcessJoinFunction<IN1, IN2, OUT> extends
       L3StreamTupleContainer<O> genealogResult = new L3StreamTupleContainer<>(record);
       GenealogJoinHelper.INSTANCE.annotateResult(left, right, genealogResult);
       genealogResult.setLineageReliable(left.getGenealogData() != null && right.getGenealogData() != null && left.getLineageReliable() && right.getLineageReliable());
-      genealogResult.copyTimes(left, right);
+      genealogResult.copyTimesTFL(left, right);
       delegate.collect(genealogResult);
     }
 

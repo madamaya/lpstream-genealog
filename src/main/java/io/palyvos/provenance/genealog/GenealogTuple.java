@@ -1,7 +1,10 @@
 package io.palyvos.provenance.genealog;
 
+import io.palyvos.provenance.l3stream.util.object.TimestampsForLatency;
 import io.palyvos.provenance.util.TimestampedUIDTuple;
 import io.palyvos.provenance.ananke.functions.ProvenanceTupleContainer;
+import org.apache.flink.api.java.tuple.Tuple2;
+
 import java.util.Collection;
 
 /**
@@ -54,6 +57,14 @@ public interface GenealogTuple extends TimestampedUIDTuple {
       default:
         break;
     }
+  }
+
+  default TimestampsForLatency getTfl() {
+    throw new UnsupportedOperationException();
+  }
+
+  default void setTfl(TimestampsForLatency tfl) {
+    throw new UnsupportedOperationException();
   }
 
   default GenealogTupleType getTupleType() {

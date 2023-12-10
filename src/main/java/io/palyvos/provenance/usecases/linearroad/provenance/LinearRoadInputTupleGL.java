@@ -3,7 +3,10 @@ package io.palyvos.provenance.usecases.linearroad.provenance;
 import io.palyvos.provenance.genealog.GenealogData;
 import io.palyvos.provenance.genealog.GenealogTuple;
 import io.palyvos.provenance.genealog.GenealogTupleType;
+import io.palyvos.provenance.l3stream.util.object.TimestampsForLatency;
 import io.palyvos.provenance.usecases.linearroad.noprovenance.LinearRoadInputTuple;
+import org.apache.flink.api.java.tuple.Tuple2;
+
 import java.util.regex.Pattern;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
@@ -15,6 +18,11 @@ public class LinearRoadInputTupleGL extends
 
   protected LinearRoadInputTupleGL(String[] readings) {
     super(readings);
+  }
+
+  public LinearRoadInputTupleGL(int type, long time, int vid, int speed, int xway, int lane,
+                                int dir, int seg, int pos) {
+    super(type, time, vid, speed, xway, lane, dir, seg, pos);
   }
 
   public LinearRoadInputTupleGL(int type, long time, int vid, int speed, int xway, int lane,
@@ -94,5 +102,15 @@ public class LinearRoadInputTupleGL extends
   @Override
   public String toString() {
     return super.toString();
+  }
+
+  @Override
+  public TimestampsForLatency getTfl() {
+    return super.getTfl();
+  }
+
+  @Override
+  public void setTfl(TimestampsForLatency tfl) {
+    super.setTfl(tfl);
   }
 }

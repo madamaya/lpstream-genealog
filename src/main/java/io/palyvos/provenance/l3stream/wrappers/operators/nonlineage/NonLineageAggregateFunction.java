@@ -4,6 +4,7 @@ import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.l3stream.wrappers.operators.GenealogAccumulator;
 import org.apache.flink.api.common.functions.AggregateFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
 
 import java.util.function.Supplier;
 
@@ -40,7 +41,8 @@ public class NonLineageAggregateFunction<IN, ACC, OUT>
       L3StreamTupleContainer<IN> value, GenealogAccumulator<ACC> accumulator) {
     // accumulator.strategy.addWindowProvenance(value);
     accumulator.updateTimestamp(value.getTimestamp());
-    accumulator.updateStimulus(value.getStimulus());
+    // accumulator.updateStimulus(value.getStimulus());
+    accumulator.setTfl(value.getTfl());
     accumulator.setAccumulator(delegate.add(value.tuple(), accumulator.getAccumulator()));
     return accumulator;
   }
@@ -51,7 +53,7 @@ public class NonLineageAggregateFunction<IN, ACC, OUT>
     L3StreamTupleContainer<OUT> genealogResult = new L3StreamTupleContainer<>(result);
     // accumulator.strategy.annotateWindowResult(genealogResult);
     genealogResult.setTimestamp(accumulator.getTimestamp());
-    genealogResult.setStimulus(accumulator.getStimulus());
+    genealogResult.setTfl(accumulator.getTfl());
     return genealogResult;
   }
 
