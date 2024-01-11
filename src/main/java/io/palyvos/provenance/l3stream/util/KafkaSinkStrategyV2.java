@@ -8,5 +8,7 @@ import java.util.Properties;
 
 public interface KafkaSinkStrategyV2 {
     public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings);
+    public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings, Boolean rawStimulusFlag);
     public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings, Properties props);
+    public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings, Properties props, Boolean rawStimulusFlag);
 }

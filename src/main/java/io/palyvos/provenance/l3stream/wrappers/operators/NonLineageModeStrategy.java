@@ -99,6 +99,11 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
+    public <T, O> MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> mapTs(MapFunction<T, O> delegate) {
+        return new NonLineageMapFunctionTs<>(delegate);
+    }
+
+    @Override
     public <T, O> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> richMap(RichMapFunction<T, O> delegate) {
         return new NonLineageRichMapFunction<>(delegate);
     }
@@ -121,6 +126,11 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     @Override
     public <IN1, IN2, OUT> ProcessJoinFunction<L3StreamTupleContainer<IN1>, L3StreamTupleContainer<IN2>, L3StreamTupleContainer<OUT>> processJoin(ProcessJoinFunction<IN1, IN2, OUT> delegate) {
         return new NonLineageProcessJoinFunction<>(delegate);
+    }
+
+    @Override
+    public <IN1, IN2, OUT> ProcessJoinFunction<L3StreamTupleContainer<IN1>, L3StreamTupleContainer<IN2>, L3StreamTupleContainer<OUT>> processJoinTs(ProcessJoinFunction<IN1, IN2, OUT> delegate) {
+        return new NonLineageProcessJoinFunctionTs<>(delegate);
     }
 
     /*
