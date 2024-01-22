@@ -124,6 +124,11 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
+    public <IN1, IN2, OUT> JoinFunction<L3StreamTupleContainer<IN1>, L3StreamTupleContainer<IN2>, L3StreamTupleContainer<OUT>> joinTs(JoinFunction<IN1, IN2, OUT> delegate) {
+        return new NonLineageJoinFunctionTs<>(delegate);
+    }
+
+    @Override
     public <IN1, IN2, OUT> ProcessJoinFunction<L3StreamTupleContainer<IN1>, L3StreamTupleContainer<IN2>, L3StreamTupleContainer<OUT>> processJoin(ProcessJoinFunction<IN1, IN2, OUT> delegate) {
         return new NonLineageProcessJoinFunction<>(delegate);
     }
