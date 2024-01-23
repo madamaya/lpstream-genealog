@@ -492,6 +492,13 @@ public class ExperimentSettings implements Serializable {
     return windowSize;
   }
 
+  @Parameter(names = "--dataSize")
+  private int dataSize = -1;
+
+  public int getDataSize() {
+    return dataSize;
+  }
+
   @Parameter(names = "--invokeCpAssigner")
   private boolean invokeCpAssigner = false;
 
