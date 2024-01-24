@@ -29,7 +29,7 @@ public class LineageSerializerLatV2<T> implements KafkaRecordSerializationSchema
         long traversalStartTime = System.nanoTime();
         Set<TimestampedUIDTuple> lineage = (tuple.getLineageReliable()) ? genealogGraphTraverser.getProvenance(tuple) : null;
         long traversalEndTime = System.nanoTime();
-        String latency = Long.toString(traversalEndTime - tuple.getStimulus());
+        String latency = Long.toString(traversalStartTime - tuple.getStimulus());
         String traversalTime = Long.toString(traversalEndTime - traversalStartTime);
 
         String lineageStr = "";
