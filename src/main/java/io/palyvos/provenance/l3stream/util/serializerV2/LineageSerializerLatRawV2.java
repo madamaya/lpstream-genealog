@@ -24,21 +24,15 @@ public class LineageSerializerLatRawV2<T> implements KafkaRecordSerializationSch
     @Nullable
     @Override
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, KafkaSinkContext kafkaSinkContext, Long aLong) {
-        Set<TimestampedUIDTuple> lineage = null;
-        int lineageSize = 0;
-        long traverseStart = 0;
-        long traverseEnd = 0;
+        long traversalStartTime = System.nanoTime();
+        Set<TimestampedUIDTuple> lineage = (tuple.getLineageReliable()) ? genealogGraphTraverser.getProvenance(tuple) : null;
+        long traversalEndTime = System.nanoTime();
+        String traversalTime = Long.toString(traversalEndTime - traversalStartTime);
+
         String lineageStr = "";
         if (tuple.getLineageReliable()) {
-            traverseStart = System.nanoTime();
-            lineage = genealogGraphTraverser.getProvenance(tuple);
-            traverseEnd = System.nanoTime();
-            lineageSize = lineage.size();
             lineageStr = FormatLineage.formattedLineage(lineage);
         }
-        String latency = Long.toString(System.nanoTime() - tuple.getStimulus());
-        String traversalLatency = Long.toString(traverseEnd - traverseStart);
-
-        return new ProducerRecord<>(topic, (tuple.getStimulus() + "," + latency + "," + traversalLatency + ", Lineage(" + lineageSize + ")" + lineageStr + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
+        return new ProducerRecord<>(topic, (tuple.getStimulus() + "," + traversalTime + ", Lineage(" + lineage.size() + ")" + lineageStr + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
     }
 }
