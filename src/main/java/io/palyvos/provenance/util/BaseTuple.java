@@ -7,14 +7,16 @@ public class BaseTuple implements TimestampedTuple {
 
   protected long timestamp;
   protected long stimulus;
+  protected long kafkaAppendTime;
   protected String key;
 
   public BaseTuple() {}
 
-  public BaseTuple(long timestamp, String key, long stimulus) {
+  public BaseTuple(long timestamp, String key, long kafkaAppendTime, long stimulus) {
     this.timestamp = timestamp;
-    this.stimulus = stimulus;
     this.key = key;
+    this.kafkaAppendTime = kafkaAppendTime;
+    this.stimulus = stimulus;
   }
 
   public BaseTuple(long timestamp, String key) {
@@ -40,6 +42,14 @@ public class BaseTuple implements TimestampedTuple {
   @Override
   public void setStimulus(long stimulus) {
     this.stimulus = stimulus;
+  }
+
+  public long getKafkaAppendTime() {
+    return kafkaAppendTime;
+  }
+
+  public void setKafkaAppendTime(long kafkaAppendTime) {
+    this.kafkaAppendTime = kafkaAppendTime;
   }
 
   public String getKey() {

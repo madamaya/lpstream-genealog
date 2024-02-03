@@ -13,8 +13,8 @@ public class CountTuple extends BaseTuple {
 
   protected final long count;
 
-  public CountTuple(long timestamp, String key, long stimulus, long count) {
-    super(timestamp, key, stimulus);
+  public CountTuple(long timestamp, String key, long kafkaAppendTime, long stimulus, long count) {
+    super(timestamp, key, kafkaAppendTime, stimulus);
     this.count = count;
   }
 
@@ -59,6 +59,7 @@ public class CountTuple extends BaseTuple {
     public void write(Kryo kryo, Output output, CountTuple object) {
       output.writeLong(object.getTimestamp());
       output.writeString(object.getKey());
+      output.writeLong(object.getKafkaAppendTime());
       output.writeLong(object.getStimulus());
       output.writeLong(object.getCount());
     }
@@ -66,7 +67,7 @@ public class CountTuple extends BaseTuple {
     @Override
     public CountTuple read(Kryo kryo, Input input, Class<CountTuple> type) {
       return new CountTuple(
-          input.readLong(), input.readString(), input.readLong(), input.readLong());
+          input.readLong(), input.readString(), input.readLong(), input.readLong(), input.readLong());
     }
   }
 }

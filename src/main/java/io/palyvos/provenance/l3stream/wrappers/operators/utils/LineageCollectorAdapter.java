@@ -4,6 +4,7 @@ import io.palyvos.provenance.genealog.GenealogMapHelper;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import org.apache.flink.util.Collector;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class LineageCollectorAdapter<T, O> implements Collector<O> {
 
     private final L3StreamTupleContainer<T> input;

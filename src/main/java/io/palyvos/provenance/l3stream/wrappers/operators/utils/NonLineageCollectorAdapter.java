@@ -3,6 +3,7 @@ package io.palyvos.provenance.l3stream.wrappers.operators.utils;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import org.apache.flink.util.Collector;
 
+/* Modifications copyright (C) 2023 Masaya Yamada */
 public class NonLineageCollectorAdapter<T, O> implements Collector<O> {
 
     private final L3StreamTupleContainer<T> input;

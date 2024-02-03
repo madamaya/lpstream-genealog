@@ -30,20 +30,12 @@ public class LinearRoadInputTuple extends BaseTuple {
   }
 
   public LinearRoadInputTuple(String[] readings) {
-    this(Integer
-            .valueOf(readings[0]), Long.valueOf(readings[1]),
-        Integer.valueOf(readings[2]), Integer
-            .valueOf(readings[3]), Integer
-            .valueOf(readings[4]), Integer
-            .valueOf(readings[5]), Integer
-            .valueOf(readings[6]), Integer
-            .valueOf(readings[7]), Integer
-            .valueOf(readings[8]), System.currentTimeMillis());
+    throw new UnsupportedOperationException();
   }
 
   public LinearRoadInputTuple(int type, long time, int vid, int speed,
-      int xway, int lane, int dir, int seg, int pos, long stimulus) {
-    super(time, String.valueOf(vid), stimulus);
+      int xway, int lane, int dir, int seg, int pos, long kafkaAppendTime, long stimulus) {
+    super(time, String.valueOf(vid), kafkaAppendTime, stimulus);
     this.type = type;
     this.vid = vid;
     this.speed = speed;

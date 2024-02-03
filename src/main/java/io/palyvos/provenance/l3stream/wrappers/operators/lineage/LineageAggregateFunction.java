@@ -33,6 +33,7 @@ public class LineageAggregateFunction<IN, ACC, OUT>
       L3StreamTupleContainer<IN> value, GenealogAccumulator<ACC> accumulator) {
     accumulator.getStrategy().addWindowProvenance(value);
     accumulator.updateLineageReliable(value.getLineageReliable());
+    accumulator.updateKafkaAppendTime(value.getKafkaAppendTime());
     accumulator.updateTimestamp(value.getTimestamp());
     accumulator.updateStimulus(value.getStimulus());
     accumulator.setAccumulator(delegate.add(value.tuple(), accumulator.getAccumulator()));
@@ -46,6 +47,7 @@ public class LineageAggregateFunction<IN, ACC, OUT>
     accumulator.getStrategy().annotateWindowResult(genealogResult);
     genealogResult.setLineageReliable(accumulator.isLineageReliable());
     genealogResult.setTimestamp(accumulator.getTimestamp());
+    genealogResult.setKafkaAppendTime(accumulator.getKafkaAppendTime());
     genealogResult.setStimulus(accumulator.getStimulus());
     return genealogResult;
   }

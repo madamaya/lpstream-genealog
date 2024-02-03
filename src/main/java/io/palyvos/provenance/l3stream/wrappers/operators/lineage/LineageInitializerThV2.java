@@ -33,6 +33,7 @@ public class LineageInitializerThV2 extends RichMapFunction<KafkaInputString, L3
     out.setLineageReliable(true);
     //out.setTimestamp(System.currentTimeMillis());
     //out.setTimestamp(timestampFunction.apply(value));
+    out.setKafkaAppendTime(value.getKafkaAppandTime());
     out.setStimulus(value.getStimulus());
     // out.setStimulus(value.getKafkaAppandTime());
     //out.setStimulus(stimulusFunction.apply(value));

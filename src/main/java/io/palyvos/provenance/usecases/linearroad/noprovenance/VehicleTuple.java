@@ -18,8 +18,8 @@ public class VehicleTuple extends BaseTuple {
 
 
 	public VehicleTuple(long timestamp, int vid, int reports, int xway, int lane,
-			int dir, int seg, int pos, boolean uniquePosition, long stimulus) {
-	  super(timestamp, xway + "," + lane + "," + dir + "," + seg + "," + pos, stimulus);
+			int dir, int seg, int pos, boolean uniquePosition, long kafkaAppendTime, long stimulus) {
+	  super(timestamp, xway + "," + lane + "," + dir + "," + seg + "," + pos, kafkaAppendTime, stimulus);
 		this.vid = vid;
 		this.reports = reports;
 		this.latestXWay = xway;
