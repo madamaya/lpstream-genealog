@@ -53,7 +53,7 @@ public class NonLineageProcessJoinFunctionTs<IN1, IN2, OUT> extends
       L3StreamTupleContainer<O> genealogResult = new L3StreamTupleContainer<>(record);
       // GenealogJoinHelper.INSTANCE.annotateResult(left, right, genealogResult);
       genealogResult.copyTimes(left, right);
-      genealogResult.setStimulus(System.nanoTime() - genealogResult.getStimulus());
+      genealogResult.setDominantOpTime(System.nanoTime() - genealogResult.getDominantOpTime());
       delegate.collect(genealogResult);
     }
 

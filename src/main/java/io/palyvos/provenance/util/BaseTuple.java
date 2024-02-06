@@ -8,13 +8,15 @@ public class BaseTuple implements TimestampedTuple {
   protected long timestamp;
   protected long stimulus;
   protected long kafkaAppendTime;
+  protected long dominantOpTime;
   protected String key;
 
   public BaseTuple() {}
 
-  public BaseTuple(long timestamp, String key, long kafkaAppendTime, long stimulus) {
+  public BaseTuple(long timestamp, String key, long dominantOpTime, long kafkaAppendTime, long stimulus) {
     this.timestamp = timestamp;
     this.key = key;
+    this.dominantOpTime = dominantOpTime;
     this.kafkaAppendTime = kafkaAppendTime;
     this.stimulus = stimulus;
   }
@@ -50,6 +52,14 @@ public class BaseTuple implements TimestampedTuple {
 
   public void setKafkaAppendTime(long kafkaAppendTime) {
     this.kafkaAppendTime = kafkaAppendTime;
+  }
+
+  public long getDominantOpTime() {
+    return dominantOpTime;
+  }
+
+  public void setDominantOpTime(long dominantOpTime) {
+    this.dominantOpTime = dominantOpTime;
   }
 
   public String getKey() {

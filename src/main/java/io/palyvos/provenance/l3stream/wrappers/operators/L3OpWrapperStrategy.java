@@ -35,6 +35,8 @@ public interface L3OpWrapperStrategy {
 
     public <IN, ACC, OUT> AggregateFunction<L3StreamTupleContainer<IN>, GenealogAccumulator<ACC>, L3StreamTupleContainer<OUT>> aggregate(AggregateFunction<IN, ACC, OUT> delegate);
 
+    public <IN, ACC, OUT> AggregateFunction<L3StreamTupleContainer<IN>, GenealogAccumulator<ACC>, L3StreamTupleContainer<OUT>> aggregateTs(AggregateFunction<IN, ACC, OUT> delegate);
+
     public <T, O> MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> map(MapFunction<T, O> delegate);
     public <T, O> MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> mapTs(MapFunction<T, O> delegate);
 

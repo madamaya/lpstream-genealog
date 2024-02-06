@@ -9,14 +9,14 @@ import java.util.function.Supplier;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
-public class LineageAggregateFunction<IN, ACC, OUT>
+public class LineageAggregateFunctionTs<IN, ACC, OUT>
     implements AggregateFunction<
         L3StreamTupleContainer<IN>, GenealogAccumulator<ACC>, L3StreamTupleContainer<OUT>> {
 
   private final AggregateFunction<IN, ACC, OUT> delegate;
   private final Supplier<ProvenanceAggregateStrategy> strategySupplier;
 
-  public LineageAggregateFunction(
+  public LineageAggregateFunctionTs(
       Supplier<ProvenanceAggregateStrategy> strategySupplier,
       AggregateFunction<IN, ACC, OUT> delegate) {
     this.delegate = delegate;
@@ -48,7 +48,7 @@ public class LineageAggregateFunction<IN, ACC, OUT>
     accumulator.getStrategy().annotateWindowResult(genealogResult);
     genealogResult.setLineageReliable(accumulator.isLineageReliable());
     genealogResult.setTimestamp(accumulator.getTimestamp());
-    genealogResult.setDominantOpTime(accumulator.getDominantOpTime());
+    genealogResult.setDominantOpTime(System.nanoTime() - accumulator.getDominantOpTime());
     genealogResult.setKafkaAppendTime(accumulator.getKafkaAppendTime());
     genealogResult.setStimulus(accumulator.getStimulus());
     return genealogResult;

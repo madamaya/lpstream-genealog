@@ -2,6 +2,7 @@ package io.palyvos.provenance.l3stream.wrappers.objects;
 
 public class KafkaInput {
     private int partitionID;
+    private long dominantOpTime = Long.MIN_VALUE;
     private long kafkaAppandTime = Long.MIN_VALUE;
     private long stimulus = Long.MIN_VALUE;
 
@@ -27,6 +28,14 @@ public class KafkaInput {
 
     public void setPartitionID(int partitionID) {
         this.partitionID = partitionID;
+    }
+
+    public long getDominantOpTime() {
+        return dominantOpTime;
+    }
+
+    public void setDominantOpTime(long dominantOpTime) {
+        this.dominantOpTime = dominantOpTime;
     }
 
     public long getKafkaAppandTime() {

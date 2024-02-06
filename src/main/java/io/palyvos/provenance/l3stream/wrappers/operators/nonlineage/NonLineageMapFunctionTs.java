@@ -20,7 +20,7 @@ public class NonLineageMapFunctionTs<T, O>
     L3StreamTupleContainer<O> genealogResult = new L3StreamTupleContainer<>(result);
     // GenealogMapHelper.INSTANCE.annotateResult(value, genealogResult);
     genealogResult.copyTimes(value);
-    genealogResult.setStimulus(System.nanoTime());
+    genealogResult.setDominantOpTime(System.nanoTime());
     return genealogResult;
   }
 }

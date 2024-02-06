@@ -22,7 +22,7 @@ public class LineageMapFunctionTs<T, O>
     GenealogMapHelper.INSTANCE.annotateResult(value, genealogResult);
     genealogResult.setLineageReliable(value.getLineageReliable());
     genealogResult.copyTimes(value);
-    genealogResult.setStimulus(System.nanoTime());
+    genealogResult.setDominantOpTime(System.nanoTime());
     genealogResult.setPartitionId(value.getPartitionId());
     return genealogResult;
   }

@@ -24,7 +24,7 @@ public class LineageJoinFunctionTs<IN1, IN2, OUT>
     GenealogJoinHelper.INSTANCE.annotateResult(first, second, genealogResult);
     genealogResult.setLineageReliable(first.getGenealogData() != null && second.getGenealogData() != null && first.getLineageReliable() && second.getLineageReliable());
     genealogResult.copyTimes(first, second);
-    genealogResult.setStimulus(System.nanoTime() - genealogResult.getStimulus());
+    genealogResult.setDominantOpTime(System.nanoTime() - genealogResult.getDominantOpTime());
     return genealogResult;
   }
 }

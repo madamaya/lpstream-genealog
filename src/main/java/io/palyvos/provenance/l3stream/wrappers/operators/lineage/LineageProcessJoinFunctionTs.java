@@ -55,7 +55,7 @@ public class LineageProcessJoinFunctionTs<IN1, IN2, OUT> extends
       GenealogJoinHelper.INSTANCE.annotateResult(left, right, genealogResult);
       genealogResult.setLineageReliable(left.getGenealogData() != null && right.getGenealogData() != null && left.getLineageReliable() && right.getLineageReliable());
       genealogResult.copyTimes(left, right);
-      genealogResult.setStimulus(System.nanoTime() - genealogResult.getStimulus());
+      genealogResult.setDominantOpTime(System.nanoTime() - genealogResult.getDominantOpTime());
       delegate.collect(genealogResult);
     }
 

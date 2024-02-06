@@ -34,8 +34,8 @@ public class LinearRoadInputTuple extends BaseTuple {
   }
 
   public LinearRoadInputTuple(int type, long time, int vid, int speed,
-      int xway, int lane, int dir, int seg, int pos, long kafkaAppendTime, long stimulus) {
-    super(time, String.valueOf(vid), kafkaAppendTime, stimulus);
+      int xway, int lane, int dir, int seg, int pos, long dominantOpTime, long kafkaAppendTime, long stimulus) {
+    super(time, String.valueOf(vid), dominantOpTime, kafkaAppendTime, stimulus);
     this.type = type;
     this.vid = vid;
     this.speed = speed;
@@ -57,6 +57,18 @@ public class LinearRoadInputTuple extends BaseTuple {
     this.dir = dir;
     this.seg = seg;
     this.pos = pos;
+  }
+
+  public LinearRoadInputTuple(LinearRoadInputTuple tuple) {
+    super(tuple.getTimestamp(), String.valueOf(tuple.getVid()), tuple.getDominantOpTime(), tuple.getKafkaAppendTime(), tuple.getStimulus());
+    this.type = tuple.getType();
+    this.vid = tuple.getVid();
+    this.speed = tuple.getSpeed();
+    this.xway = tuple.getXway();
+    this.lane = tuple.getLane();
+    this.dir = tuple.getDir();
+    this.seg = tuple.getSeg();
+    this.pos = tuple.getPos();
   }
 
   public int getType() {

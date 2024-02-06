@@ -9,8 +9,8 @@ public class CountTupleGL extends CountTuple implements GenealogTuple {
 
   private GenealogData gdata;
 
-  public CountTupleGL(long timestamp, String key, long kafkaAppendTime, long stimulus, long count) {
-    super(timestamp, key, kafkaAppendTime, stimulus, count);
+  public CountTupleGL(long timestamp, String key, long dominantOpTime, long kafkaAppendTime, long stimulus, long count) {
+    super(timestamp, key, dominantOpTime, kafkaAppendTime, stimulus, count);
   }
 
   @Override

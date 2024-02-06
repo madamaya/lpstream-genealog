@@ -22,7 +22,7 @@ public class NonLineageJoinFunctionTs<IN1, IN2, OUT>
     L3StreamTupleContainer<OUT> genealogResult = new L3StreamTupleContainer<>(result);
     // GenealogJoinHelper.INSTANCE.annotateResult(first, second, genealogResult);
     genealogResult.copyTimes(first, second);
-    genealogResult.setStimulus(System.nanoTime() - genealogResult.getStimulus());
+    genealogResult.setDominantOpTime(System.nanoTime() - genealogResult.getDominantOpTime());
     return genealogResult;
   }
 }

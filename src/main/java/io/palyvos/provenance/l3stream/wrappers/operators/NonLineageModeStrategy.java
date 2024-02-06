@@ -94,6 +94,11 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
+    public <IN, ACC, OUT> AggregateFunction<L3StreamTupleContainer<IN>, GenealogAccumulator<ACC>, L3StreamTupleContainer<OUT>> aggregateTs(AggregateFunction<IN, ACC, OUT> delegate) {
+        return new NonLineageAggregateFunctionTs<IN, ACC, OUT>(aggregateStrategy, delegate);
+    }
+
+    @Override
     public <T, O> MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> map(MapFunction<T, O> delegate) {
         return new NonLineageMapFunction<>(delegate);
     }

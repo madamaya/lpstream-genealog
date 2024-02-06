@@ -12,8 +12,8 @@ public class VehicleTupleGL extends
   private GenealogData gdata = new GenealogData();
 
   public VehicleTupleGL(long time, int vid, int reports, int xway, int lane, int dir, int seg,
-      int pos, boolean uniquePosition, long kafkaAppendTime, long stimulus) {
-    super(time, vid, reports, xway, lane, dir, seg, pos, uniquePosition, kafkaAppendTime, stimulus);
+      int pos, boolean uniquePosition, long dominantOpTime, long kafkaAppendTime, long stimulus) {
+    super(time, vid, reports, xway, lane, dir, seg, pos, uniquePosition, dominantOpTime, kafkaAppendTime, stimulus);
   }
 
   @Override

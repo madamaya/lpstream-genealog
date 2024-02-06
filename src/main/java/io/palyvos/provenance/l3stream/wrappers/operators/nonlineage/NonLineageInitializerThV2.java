@@ -30,6 +30,7 @@ public class NonLineageInitializerThV2 extends RichMapFunction<KafkaInputString,
     L3StreamTupleContainer<KafkaInputString> out = new L3StreamTupleContainer<>(value);
     // out.initGenealog(GenealogTupleType.SOURCE);
     //out.setTimestamp(System.currentTimeMillis());
+    out.setDominantOpTime(value.getDominantOpTime());
     out.setKafkaAppendTime(value.getKafkaAppandTime());
     out.setStimulus(value.getStimulus());
     // out.setStimulus(value.getKafkaAppandTime());
