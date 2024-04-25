@@ -417,36 +417,6 @@ public class ExperimentSettings implements Serializable {
     }
   }
 
-  /*
-  @Parameter(names = "--CpMServerIP")
-  private String cpMServerIP = "localhost";
-
-  public String getCpMServerIP() {
-    return cpMServerIP;
-  }
-
-  @Parameter(names = "--RedisIP")
-  private String redisIp = "localhost";
-
-  public String getRedisIp() {
-    return redisIp;
-  }
-
-  @Parameter(names = "--CpMServerPort")
-  private int cpMServerPort = 10010;
-
-  public int getCpMServerPort() {
-    return cpMServerPort;
-  }
-
-  @Parameter(names = "--RedisPort")
-  private int redisPort = 6379;
-
-  public int getRedisPort() {
-    return redisPort;
-  }
-   */
-
   @Parameter(names = "--lineageTopic")
   private String lineageTopic = "lineage";
 
@@ -454,23 +424,12 @@ public class ExperimentSettings implements Serializable {
     return lineageTopic;
   }
 
-  // latencyFlag = 0 -> Produce output value
-  // latencyFlag = 1 -> Produce latency as output
   @Parameter(names = "--latencyFlag")
   private int latencyFlag = 1;
 
   public int getLatencyFlag() {
     return latencyFlag;
   }
-
-  /*
-  @Parameter(names = "--cpmProcessing", converter = CpmProcessingConverter.class)
-  private boolean cpmProcessing = false;
-
-  public boolean cpmProcessing() {
-    return cpmProcessing;
-  }
-   */
 
   @Parameter(names = "--queryName")
   private String queryName = String.valueOf(System.currentTimeMillis());
@@ -483,13 +442,6 @@ public class ExperimentSettings implements Serializable {
 
   public long getStartTime() {
     return startTime;
-  }
-
-  @Parameter(names = "--windowSize")
-  private int windowSize = 1;
-
-  public int getWindowSize() {
-    return windowSize;
   }
 
   @Parameter(names = "--dataSize")
@@ -506,40 +458,6 @@ public class ExperimentSettings implements Serializable {
     return invokeCpAssigner;
   }
 
-  public Time assignExperimentWindowSize(Time time) {
-    return Time.milliseconds(time.toMilliseconds() * windowSize);
-  }
-
-  private static class CpmProcessingConverter implements IStringConverter<Boolean> {
-    @Override
-    public Boolean convert(String value) {
-      switch (value) {
-        case "true":
-          return true;
-        default:
-          throw new IllegalArgumentException("CpmProcessingConverter: Undefined value is provided.");
-      }
-    }
-  }
-
-  /*
-  public int numOfInstanceWM() {
-    if (getLineageMode() == "NonLineageMode") {
-      return 1;
-    } else {
-      return maxParallelism();
-    }
-  }
-   */
-
-  public int getWMnumLR(int parallelism) {
-    if (parallelism == 1) {
-      return maxParallelism();
-    } else {
-      return 1;
-    }
-  }
-
   public int readPartitionNum(int parallelism) {
     if (parallelism == 1) {
       return maxParallelism();
@@ -547,16 +465,6 @@ public class ExperimentSettings implements Serializable {
       return 1;
     }
   }
-
-  /*
-  public String getTopicSuffix() {
-    if (this.getLineageMode() == "NonLineageMode") {
-      return "-o";
-    } else {
-      return "-l";
-    }
-  }
-   */
 
   public String getOutputTopicName(String name) {
     if (this.getLineageMode() == "NonLineageMode") {
