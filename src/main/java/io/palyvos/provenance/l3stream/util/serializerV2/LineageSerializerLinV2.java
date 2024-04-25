@@ -4,12 +4,15 @@ import io.palyvos.provenance.genealog.GenealogGraphTraverser;
 import io.palyvos.provenance.l3stream.util.FormatLineage;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
+import io.palyvos.provenance.util.TimestampedUIDTuple;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.streaming.connectors.kafka.KafkaSerializationSchema;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Set;
 
 public class LineageSerializerLinV2<T> implements KafkaRecordSerializationSchema<L3StreamTupleContainer<T>> {
     private String topic;
@@ -23,11 +26,9 @@ public class LineageSerializerLinV2<T> implements KafkaRecordSerializationSchema
     @Nullable
     @Override
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, KafkaSinkContext kafkaSinkContext, Long aLong) {
-        String lineage = "";
-        if (tuple.getLineageReliable()) {
-            lineage = FormatLineage.formattedLineage(genealogGraphTraverser.getProvenance(tuple));
-        }
-        String ret = "{\"OUT\":\"" + tuple.tuple() + "\",\"TS\":\"" + tuple.getTimestamp() + "\",\"CPID\":\"" + tuple.getCheckpointId() + "\",\"LINEAGE\":[" + lineage + "]" + ",\"FLAG\":\"" + tuple.getLineageReliable() + "\"}";
-        return new ProducerRecord<>(topic, ret.getBytes(StandardCharsets.UTF_8));
+        Set<TimestampedUIDTuple> lineage = (tuple.getLineageReliable()) ? genealogGraphTraverser.getProvenance(tuple) : new HashSet<>();
+        String lineageStr = (tuple.getLineageReliable()) ? FormatLineage.formattedLineage(lineage) : "";
+
+        return new ProducerRecord<>(topic, ("Lineage(" + lineage.size() + ")[" + lineageStr + "]," + tuple.tuple() + "," + tuple.getTimestamp()).getBytes(StandardCharsets.UTF_8));
     }
 }

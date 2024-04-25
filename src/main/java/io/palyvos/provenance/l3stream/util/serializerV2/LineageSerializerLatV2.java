@@ -12,6 +12,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.Set;
 
 public class LineageSerializerLatV2<T> implements KafkaRecordSerializationSchema<L3StreamTupleContainer<T>> {
@@ -27,12 +28,12 @@ public class LineageSerializerLatV2<T> implements KafkaRecordSerializationSchema
     @Override
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, KafkaSinkContext kafkaSinkContext, Long aLong) {
         long traversalStartTime = System.nanoTime();
-        Set<TimestampedUIDTuple> lineage = (tuple.getLineageReliable()) ? genealogGraphTraverser.getProvenance(tuple) : null;
+        Set<TimestampedUIDTuple> lineage = (tuple.getLineageReliable()) ? genealogGraphTraverser.getProvenance(tuple) : new HashSet<>();
         String lineageStr = (tuple.getLineageReliable()) ? FormatLineage.formattedLineage(lineage) : "";
         long traversalEndTime = System.nanoTime();
 
         String latency = Long.toString(traversalEndTime - tuple.getStimulus());
         String traversalTime = Long.toString(traversalEndTime - traversalStartTime);
-        return new ProducerRecord<>(topic, (latency + "," + tuple.getKafkaAppendTime() + "," + tuple.getDominantOpTime() + "," + traversalTime + ", Lineage(" + lineage.size() + ")" + lineageStr + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
+        return new ProducerRecord<>(topic, (latency + "," + tuple.getKafkaAppendTime() + "," + tuple.getDominantOpTime() + "," + traversalTime + ",Lineage(" + lineage.size() + ")[" + lineageStr + "]," + tuple.tuple() + "," + tuple.getTimestamp()).getBytes(StandardCharsets.UTF_8));
     }
 }

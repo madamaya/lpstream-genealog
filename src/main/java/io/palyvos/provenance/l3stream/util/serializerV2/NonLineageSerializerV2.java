@@ -18,7 +18,7 @@ public class NonLineageSerializerV2<T> implements KafkaRecordSerializationSchema
     @Nullable
     @Override
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, KafkaSinkContext kafkaSinkContext, Long aLong) {
-        String ret = "{\"OUT\":\"" + tuple.tuple() + "\",\"CPID\":\"" + tuple.getCheckpointId() + "\",\"TS\":\"" + tuple.getTimestamp() + "\"}";
+        String ret = tuple.tuple() + "," + tuple.getTimestamp() + "," + tuple.getCheckpointId();
         return new ProducerRecord<>(topic, ret.getBytes(StandardCharsets.UTF_8));
     }
 }

@@ -17,29 +17,11 @@ import java.util.Properties;
 public class NonLineageKafkaSinkV2 implements KafkaSinkStrategyV2 {
     @Override
     public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings) {
-        return newInstance(topic, broker, settings, new Properties(), false);
-    }
-
-    @Override
-    public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings, Boolean rawStimulusFlag) {
-        return newInstance(topic, broker, settings, new Properties(), rawStimulusFlag);
+        return newInstance(topic, broker, settings, new Properties());
     }
 
     @Override
     public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings, Properties props) {
-        return newInstance(topic, broker, settings, props, false);
-    }
-
-    @Override
-    public <T> KafkaSink<L3StreamTupleContainer<T>> newInstance(String topic, String broker, ExperimentSettings settings, Properties props, Boolean rawStimulusFlag) {
-        if (rawStimulusFlag) {
-            return KafkaSink.<L3StreamTupleContainer<T>>builder()
-                    .setBootstrapServers(broker)
-                    .setKafkaProducerConfig(props)
-                    .setRecordSerializer(new NonLineageSerializerLatRawV2<>(topic))
-                    .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
-                    .build();
-        }
         if (settings.getLatencyFlag() == 0) {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
