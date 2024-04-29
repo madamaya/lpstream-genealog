@@ -29,6 +29,6 @@ public class LineageSerializerLinV2<T> implements KafkaRecordSerializationSchema
         Set<TimestampedUIDTuple> lineage = (tuple.getLineageReliable()) ? genealogGraphTraverser.getProvenance(tuple) : new HashSet<>();
         String lineageStr = (tuple.getLineageReliable()) ? FormatLineage.formattedLineage(lineage) : "";
 
-        return new ProducerRecord<>(topic, ("Lineage(" + lineage.size() + ")[" + lineageStr + "]," + tuple.tuple() + "," + tuple.getTimestamp()).getBytes(StandardCharsets.UTF_8));
+        return new ProducerRecord<>(topic, ("Lineage(" + lineage.size() + ")[" + lineageStr + "]," + tuple.tuple() + "," + tuple.getTimestamp() + "," + tuple.getLineageReliable()).getBytes(StandardCharsets.UTF_8));
     }
 }

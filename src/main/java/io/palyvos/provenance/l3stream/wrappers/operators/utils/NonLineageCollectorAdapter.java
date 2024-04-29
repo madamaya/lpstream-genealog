@@ -18,7 +18,6 @@ public class NonLineageCollectorAdapter<T, O> implements Collector<O> {
     @Override
     public void collect(O record) {
         L3StreamTupleContainer<O> genealogResult = new L3StreamTupleContainer<>(record);
-        // GenealogMapHelper.INSTANCE.annotateResult(input, genealogResult);
         genealogResult.copyTimes(input);
         delegate.collect(genealogResult);
     }
