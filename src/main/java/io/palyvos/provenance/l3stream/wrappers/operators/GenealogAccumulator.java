@@ -1,6 +1,7 @@
 package io.palyvos.provenance.l3stream.wrappers.operators;
 
 import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
+
 import java.io.Serializable;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */

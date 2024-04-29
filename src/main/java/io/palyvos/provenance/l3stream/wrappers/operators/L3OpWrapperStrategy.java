@@ -1,6 +1,5 @@
 package io.palyvos.provenance.l3stream.wrappers.operators;
 
-import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInput;
 import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInputString;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;

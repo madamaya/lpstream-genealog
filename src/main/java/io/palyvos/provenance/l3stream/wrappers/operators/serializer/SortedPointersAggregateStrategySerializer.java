@@ -6,15 +6,9 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import io.palyvos.provenance.ananke.aggregate.SortedPointersAggregateStrategy;
 import io.palyvos.provenance.genealog.GenealogTuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class SortedPointersAggregateStrategySerializer extends Serializer<SortedPointersAggregateStrategy> implements Serializable {

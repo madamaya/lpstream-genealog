@@ -1,15 +1,12 @@
 package io.palyvos.provenance.l3stream.util;
 
-import io.palyvos.provenance.l3stream.util.serializer.LineageSerializer;
-import io.palyvos.provenance.l3stream.util.serializer.LineageSerializerLat;
-import io.palyvos.provenance.l3stream.util.serializer.LineageSerializerLin;
-import io.palyvos.provenance.l3stream.util.serializerV2.*;
+import io.palyvos.provenance.l3stream.util.serializerV2.LineageSerializerLatV2;
+import io.palyvos.provenance.l3stream.util.serializerV2.LineageSerializerLinV2;
+import io.palyvos.provenance.l3stream.util.serializerV2.LineageSerializerV2;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.connector.base.DeliveryGuarantee;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 
 import java.util.Properties;
 
