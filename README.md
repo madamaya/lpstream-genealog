@@ -1,3 +1,6 @@
+## This is an extended version of Ananke for l3stream. Original Ananke repository is [here](https://github.com/dmpalyvos/ananke).
+
+
 # Ananke
 
 ![Poster outlining Ananke's main components](media/ananke_vldb21_poster.png)
