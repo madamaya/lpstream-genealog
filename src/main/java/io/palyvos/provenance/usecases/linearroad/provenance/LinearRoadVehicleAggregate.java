@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 import org.apache.flink.api.common.functions.AggregateFunction;
 
+/* Modifications copyright (C) 2024 Masaya Yamada */
 public class LinearRoadVehicleAggregate
     implements AggregateFunction<LinearRoadInputTupleGL, VehicleAccumulator, VehicleTupleGL> {
 
@@ -78,6 +79,8 @@ public class LinearRoadVehicleAggregate
 
     @Override
     public VehicleTupleGL doGetAggregatedResult() {
+      throw new UnsupportedOperationException();
+      /*
       boolean uniquePosition = positions.size() == 1;
       VehicleTupleGL result =
           new VehicleTupleGL(
@@ -92,6 +95,7 @@ public class LinearRoadVehicleAggregate
               uniquePosition,
               stimulus);
       return result;
+       */
     }
 
     @Override

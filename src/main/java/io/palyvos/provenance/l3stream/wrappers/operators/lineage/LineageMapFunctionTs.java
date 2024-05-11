@@ -2,24 +2,17 @@ package io.palyvos.provenance.l3stream.wrappers.operators.lineage;
 
 import io.palyvos.provenance.genealog.GenealogMapHelper;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
-import org.apache.flink.api.common.functions.RichMapFunction;
-import org.apache.flink.configuration.Configuration;
+import org.apache.flink.api.common.functions.MapFunction;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
-public class LineageRichMapFunction<T, O>
-    extends RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> {
+public class LineageMapFunctionTs<T, O>
+    implements MapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<O>> {
 
-  private final RichMapFunction<T, O> delegate;
+  private final MapFunction<T, O> delegate;
 
-  public LineageRichMapFunction(RichMapFunction<T, O> delegate) {
+  public LineageMapFunctionTs(MapFunction<T, O> delegate) {
     this.delegate = delegate;
-  }
-
-  @Override
-  public void open(Configuration parameters) throws Exception {
-    delegate.setRuntimeContext(getRuntimeContext());
-    delegate.open(parameters);
   }
 
   @Override
@@ -29,12 +22,8 @@ public class LineageRichMapFunction<T, O>
     GenealogMapHelper.INSTANCE.annotateResult(value, genealogResult);
     genealogResult.setLineageReliable(value.getLineageReliable());
     genealogResult.copyTimes(value);
+    genealogResult.setDominantOpTime(System.nanoTime());
     genealogResult.setPartitionId(value.getPartitionId());
     return genealogResult;
-  }
-
-  @Override
-  public void close() throws Exception {
-    delegate.close();
   }
 }

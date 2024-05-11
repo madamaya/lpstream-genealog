@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.apache.flink.api.common.functions.AggregateFunction;
 
+/* Modifications copyright (C) 2024 Masaya Yamada */
 public class LinearRoadVehicleAggregate implements
     AggregateFunction<LinearRoadInputTuple, VehicleAccumulator, VehicleTuple> {
 
@@ -68,11 +69,14 @@ public class LinearRoadVehicleAggregate implements
 
     @Override
     public VehicleTuple doGetAggregatedResult() {
+      throw new UnsupportedOperationException();
+      /*
       boolean uniquePosition = positions.size() == 1;
       VehicleTuple result = new VehicleTuple(timestamp, Integer.valueOf(key),
           counter, latestXWay, latestLane, latestDir, latestSeg,
           latestPos, uniquePosition, stimulus);
       return result;
+       */
     }
 
     @Override

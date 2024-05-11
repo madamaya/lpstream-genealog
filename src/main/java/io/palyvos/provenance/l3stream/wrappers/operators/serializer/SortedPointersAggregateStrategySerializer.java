@@ -6,15 +6,9 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import io.palyvos.provenance.ananke.aggregate.SortedPointersAggregateStrategy;
 import io.palyvos.provenance.genealog.GenealogTuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class SortedPointersAggregateStrategySerializer extends Serializer<SortedPointersAggregateStrategy> implements Serializable {
@@ -60,21 +54,23 @@ public class SortedPointersAggregateStrategySerializer extends Serializer<Sorted
             spas.setEarliest(null);
             spas.setLatest(null);
         } else if (ary.size() == 1) {
-            ary.get(0).setStimulus(System.nanoTime());
+            // ary.get(0).setStimulus(System.nanoTime());
             spas.setEarliest(ary.get(0));
             spas.setLatest(ary.get(0));
         } else {
-            for (int i = 0; i < ary.size() - 1; i++) {
-                ary.get(i).setStimulus(System.nanoTime());
-                ary.get(i).setNext(ary.get(i + 1));
-            }
-            ary.get(ary.size() - 1).setStimulus(System.nanoTime());
-
             GenealogTuple earliest = ary.get(0);
-            GenealogTuple latest = ary.get(ary.size() - 1);
+            GenealogTuple current = earliest;
+            for (int i = 0; i < ary.size() - 1; i++) {
+                // ary.get(i).setStimulus(System.nanoTime());
+                // ary.get(i).setNext(ary.get(i + 1));
+                current.setNext(ary.get(i + 1));
+                current = current.getNext();
+            }
+            // ary.get(ary.size() - 1).setStimulus(System.nanoTime());
+            // GenealogTuple latest = ary.get(ary.size() - 1);
 
             spas.setEarliest(earliest);
-            spas.setLatest(latest);
+            spas.setLatest(ary.get(ary.size() - 1));
         }
         return spas;
     }

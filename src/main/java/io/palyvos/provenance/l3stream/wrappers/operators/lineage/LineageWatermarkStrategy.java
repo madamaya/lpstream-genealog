@@ -2,7 +2,6 @@ package io.palyvos.provenance.l3stream.wrappers.operators.lineage;
 
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import org.apache.flink.api.common.eventtime.*;
-import org.apache.flink.api.java.tuple.Tuple2;
 
 import java.util.*;
 
@@ -16,8 +15,8 @@ public class LineageWatermarkStrategy<T>
 
     public LineageWatermarkStrategy(WatermarkStrategy<T> delegate, int numOfPartitions) {
         this.delegate = delegate;
-        if (numOfPartitions <= 0) {
-            throw new IllegalArgumentException("LineageWatermarkStrategy: numOfPartitions = " + numOfPartitions + " < 0");
+        if (numOfPartitions <= 1) {
+            throw new IllegalArgumentException("LineageWatermarkStrategy: numOfPartitions = " + numOfPartitions + " <= 1");
         }
         this.numOfPartitions = numOfPartitions;
     }

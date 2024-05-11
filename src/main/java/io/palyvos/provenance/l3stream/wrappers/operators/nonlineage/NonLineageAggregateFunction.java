@@ -40,6 +40,8 @@ public class NonLineageAggregateFunction<IN, ACC, OUT>
       L3StreamTupleContainer<IN> value, GenealogAccumulator<ACC> accumulator) {
     // accumulator.strategy.addWindowProvenance(value);
     accumulator.updateTimestamp(value.getTimestamp());
+    accumulator.updateDominantOpTime(value.getDominantOpTime());
+    accumulator.updateKafkaAppendTime(value.getKafkaAppendTime());
     accumulator.updateStimulus(value.getStimulus());
     accumulator.setAccumulator(delegate.add(value.tuple(), accumulator.getAccumulator()));
     return accumulator;
@@ -51,6 +53,8 @@ public class NonLineageAggregateFunction<IN, ACC, OUT>
     L3StreamTupleContainer<OUT> genealogResult = new L3StreamTupleContainer<>(result);
     // accumulator.strategy.annotateWindowResult(genealogResult);
     genealogResult.setTimestamp(accumulator.getTimestamp());
+    genealogResult.setDominantOpTime(accumulator.getDominantOpTime());
+    genealogResult.setKafkaAppendTime(accumulator.getKafkaAppendTime());
     genealogResult.setStimulus(accumulator.getStimulus());
     return genealogResult;
   }

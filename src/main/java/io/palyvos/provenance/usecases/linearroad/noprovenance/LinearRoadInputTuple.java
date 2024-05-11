@@ -17,7 +17,6 @@ public class LinearRoadInputTuple extends BaseTuple {
   private int dir;
   private int seg;
   private int pos;
-  private int partitionID;
 
   public static LinearRoadInputTuple fromReading(String reading) {
     try {
@@ -30,20 +29,12 @@ public class LinearRoadInputTuple extends BaseTuple {
   }
 
   public LinearRoadInputTuple(String[] readings) {
-    this(Integer
-            .valueOf(readings[0]), Long.valueOf(readings[1]),
-        Integer.valueOf(readings[2]), Integer
-            .valueOf(readings[3]), Integer
-            .valueOf(readings[4]), Integer
-            .valueOf(readings[5]), Integer
-            .valueOf(readings[6]), Integer
-            .valueOf(readings[7]), Integer
-            .valueOf(readings[8]), System.currentTimeMillis());
+    throw new UnsupportedOperationException();
   }
 
   public LinearRoadInputTuple(int type, long time, int vid, int speed,
-      int xway, int lane, int dir, int seg, int pos, long stimulus) {
-    super(time, String.valueOf(vid), stimulus);
+      int xway, int lane, int dir, int seg, int pos, long dominantOpTime, long kafkaAppendTime, long stimulus) {
+    super(time, String.valueOf(vid), dominantOpTime, kafkaAppendTime, stimulus);
     this.type = type;
     this.vid = vid;
     this.speed = speed;
@@ -65,6 +56,18 @@ public class LinearRoadInputTuple extends BaseTuple {
     this.dir = dir;
     this.seg = seg;
     this.pos = pos;
+  }
+
+  public LinearRoadInputTuple(LinearRoadInputTuple tuple) {
+    super(tuple.getTimestamp(), String.valueOf(tuple.getVid()), tuple.getDominantOpTime(), tuple.getKafkaAppendTime(), tuple.getStimulus());
+    this.type = tuple.getType();
+    this.vid = tuple.getVid();
+    this.speed = tuple.getSpeed();
+    this.xway = tuple.getXway();
+    this.lane = tuple.getLane();
+    this.dir = tuple.getDir();
+    this.seg = tuple.getSeg();
+    this.pos = tuple.getPos();
   }
 
   public int getType() {
@@ -129,14 +132,6 @@ public class LinearRoadInputTuple extends BaseTuple {
 
   public void setPos(int pos) {
     this.pos = pos;
-  }
-
-  public int getPartitionID() {
-    return partitionID;
-  }
-
-  public void setPartitionID(int partitionID) {
-    this.partitionID = partitionID;
   }
 
   @Override

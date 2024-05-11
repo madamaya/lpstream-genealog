@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.apache.flink.api.common.functions.AggregateFunction;
 
+/* Modifications copyright (C) 2024 Masaya Yamada */
 public class LinearRoadAccidentAggregate implements AggregateFunction<VehicleTuple,
     AccidentCountAccumulator, CountTuple> {
 
@@ -49,7 +50,8 @@ public class LinearRoadAccidentAggregate implements AggregateFunction<VehicleTup
 
     @Override
     public CountTuple doGetAggregatedResult() {
-      return new CountTuple(timestamp, key, stimulus, carIds.size());
+      throw new UnsupportedOperationException();
+      // return new CountTuple(timestamp, key, stimulus, carIds.size());
     }
 
     @Override

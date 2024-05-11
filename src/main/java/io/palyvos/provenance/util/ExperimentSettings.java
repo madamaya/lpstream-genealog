@@ -3,29 +3,28 @@ package io.palyvos.provenance.util;
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
 import io.palyvos.provenance.ananke.aggregate.ListAggregateStrategy;
+import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
 import io.palyvos.provenance.ananke.aggregate.SortedPointersAggregateStrategy;
 import io.palyvos.provenance.ananke.aggregate.UnsortedPointersAggregateStrategy;
-import io.palyvos.provenance.ananke.output.FileProvenanceGraphEncoder;
-import io.palyvos.provenance.ananke.output.GephiProvenanceGraphEncoder;
-import io.palyvos.provenance.ananke.output.NoOpProvenanceGraphEncoder;
-import io.palyvos.provenance.ananke.output.ProvenanceGraphEncoder;
-import io.palyvos.provenance.ananke.output.TimestampedFileProvenanceGraphEncoder;
-import java.io.File;
-import java.io.Serializable;
-import java.lang.management.ManagementFactory;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import io.palyvos.provenance.l3stream.util.L3Settings;
+import io.palyvos.provenance.ananke.output.*;
+import io.palyvos.provenance.l3stream.util.KafkaSinkStrategyV2;
+import io.palyvos.provenance.l3stream.util.LineageKafkaSinkV2;
+import io.palyvos.provenance.l3stream.util.NonLineageKafkaSinkV2;
 import io.palyvos.provenance.l3stream.wrappers.operators.L3OpWrapperStrategy;
 import io.palyvos.provenance.l3stream.wrappers.operators.LineageModeStrategy;
 import io.palyvos.provenance.l3stream.wrappers.operators.NonLineageModeStrategy;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
+
+import java.io.File;
+import java.io.Serializable;
+import java.lang.management.ManagementFactory;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
@@ -88,7 +87,8 @@ public class ExperimentSettings implements Serializable {
 
   @Parameter(names = "--aggregateStrategy", converter = AggregateStrategyConverter.class, description = "strategy for handling out-of-order aggregate tuples")
   private Supplier<ProvenanceAggregateStrategy> aggregateStrategySupplier =
-      (Supplier<ProvenanceAggregateStrategy> & Serializable) SortedPointersAggregateStrategy::new;
+      // (Supplier<ProvenanceAggregateStrategy> & Serializable) SortedPointersAggregateStrategy::new;
+      (Supplier<ProvenanceAggregateStrategy> & Serializable) UnsortedPointersAggregateStrategy::new;
 
   @Parameter(names = "--graphEncoder", description = "output encoder for the forward-provenance graph")
   private String graphEncoder = TimestampedFileProvenanceGraphEncoder.class.getSimpleName();
@@ -413,36 +413,6 @@ public class ExperimentSettings implements Serializable {
     }
   }
 
-  /*
-  @Parameter(names = "--CpMServerIP")
-  private String cpMServerIP = "localhost";
-
-  public String getCpMServerIP() {
-    return cpMServerIP;
-  }
-
-  @Parameter(names = "--RedisIP")
-  private String redisIp = "localhost";
-
-  public String getRedisIp() {
-    return redisIp;
-  }
-
-  @Parameter(names = "--CpMServerPort")
-  private int cpMServerPort = 10010;
-
-  public int getCpMServerPort() {
-    return cpMServerPort;
-  }
-
-  @Parameter(names = "--RedisPort")
-  private int redisPort = 6379;
-
-  public int getRedisPort() {
-    return redisPort;
-  }
-   */
-
   @Parameter(names = "--lineageTopic")
   private String lineageTopic = "lineage";
 
@@ -450,23 +420,12 @@ public class ExperimentSettings implements Serializable {
     return lineageTopic;
   }
 
-  // latencyFlag = 0 -> Produce output value
-  // latencyFlag = 1 -> Produce latency as output
   @Parameter(names = "--latencyFlag")
   private int latencyFlag = 1;
 
   public int getLatencyFlag() {
     return latencyFlag;
   }
-
-  /*
-  @Parameter(names = "--cpmProcessing", converter = CpmProcessingConverter.class)
-  private boolean cpmProcessing = false;
-
-  public boolean cpmProcessing() {
-    return cpmProcessing;
-  }
-   */
 
   @Parameter(names = "--queryName")
   private String queryName = String.valueOf(System.currentTimeMillis());
@@ -481,52 +440,62 @@ public class ExperimentSettings implements Serializable {
     return startTime;
   }
 
-  @Parameter(names = "--windowSize")
-  private int windowSize = 1;
+  @Parameter(names = "--dataSize")
+  private int dataSize = -1;
 
-  public int getWindowSize() {
-    return windowSize;
+  public int getDataSize() {
+    return dataSize;
   }
 
-  public Time assignExperimentWindowSize(Time time) {
-    return Time.milliseconds(time.toMilliseconds() * windowSize);
+  @Parameter(names = "--invokeCpAssigner")
+  private boolean invokeCpAssigner = false;
+
+  public boolean isInvokeCpAssigner() {
+    return invokeCpAssigner;
   }
 
-  private static class CpmProcessingConverter implements IStringConverter<Boolean> {
-    @Override
-    public Boolean convert(String value) {
-      switch (value) {
-        case "true":
-          return true;
-        default:
-          throw new IllegalArgumentException("CpmProcessingConverter: Undefined value is provided.");
-      }
-    }
-  }
-
-  public int numOfInstanceWM() {
-    if (getLineageMode() == "NonLineageMode") {
-      return 1;
-    } else {
+  public int readPartitionNum(int parallelism) {
+    if (parallelism == 1) {
       return maxParallelism();
-    }
-  }
-
-  /*
-  public String getTopicSuffix() {
-    if (this.getLineageMode() == "NonLineageMode") {
-      return "-o";
     } else {
-      return "-l";
+      return 1;
     }
   }
-   */
 
   public String getOutputTopicName(String name) {
     if (this.getLineageMode() == "NonLineageMode") {
       return name;
     } else {
       return getLineageTopic();
+    }
+  }
+
+  public KafkaSinkStrategyV2 getKafkaSink() {
+    if (this.getLineageMode() == "NonLineageMode") {
+      return new NonLineageKafkaSinkV2();
+    } else {
+      return new LineageKafkaSinkV2();
+    }
+  }
+
+  @Parameter(names = "--startingOffset")
+  private String startingOffset = "latest";
+
+  public String getStartingOffset() {
+    return startingOffset;
+  }
+
+  public OffsetsInitializer setOffsetsInitializer() {
+    return this.setOffsetsInitializer(this.getStartingOffset());
+  }
+
+  public OffsetsInitializer setOffsetsInitializer(String startingOffset) {
+    if (startingOffset.equals("latest")) {
+      return OffsetsInitializer.latest();
+    } else if (startingOffset.equals("ealiest")) {
+      return OffsetsInitializer.earliest();
+    } else {
+      throw new IllegalArgumentException();
     }
   }
 }

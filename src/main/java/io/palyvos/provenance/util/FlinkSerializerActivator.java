@@ -2,6 +2,7 @@ package io.palyvos.provenance.util;
 
 import com.esotericsoftware.kryo.Serializer;
 import io.palyvos.provenance.ananke.aggregate.SortedPointersAggregateStrategy;
+import io.palyvos.provenance.ananke.aggregate.UnsortedPointersAggregateStrategy;
 import io.palyvos.provenance.genealog.GenealogData;
 import io.palyvos.provenance.genealog.GenealogDataSerializer;
 import io.palyvos.provenance.ananke.stdops.HelperProvenanceGraphTuple;
@@ -11,6 +12,7 @@ import io.palyvos.provenance.ananke.functions.ProvenanceTupleContainer.KryoSeria
 import java.io.Serializable;
 
 import io.palyvos.provenance.l3stream.wrappers.operators.serializer.SortedPointersAggregateStrategySerializer;
+import io.palyvos.provenance.l3stream.wrappers.operators.serializer.UnsortedPointersAggregateStrategySerializer;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
@@ -85,6 +87,10 @@ public enum FlinkSerializerActivator {
       env.addDefaultKryoSerializer(
               HelperProvenanceGraphTuple.class,
               new HelperProvenanceGraphTuple.KryoSerializer(customGenericSerializer));
+
+      env.addDefaultKryoSerializer(
+              UnsortedPointersAggregateStrategy.class,
+              new UnsortedPointersAggregateStrategySerializer());
 
       env.addDefaultKryoSerializer(
               SortedPointersAggregateStrategy.class,

@@ -5,14 +5,15 @@ import io.palyvos.provenance.genealog.GenealogTuple;
 import io.palyvos.provenance.genealog.GenealogTupleType;
 import io.palyvos.provenance.usecases.linearroad.noprovenance.VehicleTuple;
 
+/* Modifications copyright (C) 2024 Masaya Yamada */
 public class VehicleTupleGL extends
     VehicleTuple implements GenealogTuple {
 
   private GenealogData gdata = new GenealogData();
 
   public VehicleTupleGL(long time, int vid, int reports, int xway, int lane, int dir, int seg,
-      int pos, boolean uniquePosition, long stimulus) {
-    super(time, vid, reports, xway, lane, dir, seg, pos, uniquePosition, stimulus);
+      int pos, boolean uniquePosition, long dominantOpTime, long kafkaAppendTime, long stimulus) {
+    super(time, vid, reports, xway, lane, dir, seg, pos, uniquePosition, dominantOpTime, kafkaAppendTime, stimulus);
   }
 
   @Override

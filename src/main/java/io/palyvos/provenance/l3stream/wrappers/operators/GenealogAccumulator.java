@@ -8,8 +8,10 @@ import java.io.Serializable;
 public class GenealogAccumulator<T> implements Serializable {
     private final ProvenanceAggregateStrategy strategy;
     T accumulator;
-    private long timestamp;
-    private long stimulus;
+    private long timestamp = -1;
+    private long dominantOpTime = -1;
+    private long kafkaAppendTime = -1;
+    private long stimulus = -1;
     private boolean lineageReliable;
 
     public GenealogAccumulator(ProvenanceAggregateStrategy strategy, T accumulator, boolean lineageReliable) {
@@ -34,12 +36,28 @@ public class GenealogAccumulator<T> implements Serializable {
         this.timestamp = Math.max(this.timestamp, timestamp);
     }
 
+    public void updateDominantOpTime(long dominantOpTime) {
+        this.dominantOpTime = Math.max(this.dominantOpTime, dominantOpTime);
+    }
+
+    public void updateKafkaAppendTime(long kafkaAppendTime) {
+        this.kafkaAppendTime = Math.max(this.kafkaAppendTime, kafkaAppendTime);
+    }
+
     public void updateStimulus(long stimulus) {
         this.stimulus = Math.max(this.stimulus, stimulus);
     }
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public long getDominantOpTime() {
+        return dominantOpTime;
+    }
+
+    public long getKafkaAppendTime() {
+        return kafkaAppendTime;
     }
 
     public long getStimulus() {

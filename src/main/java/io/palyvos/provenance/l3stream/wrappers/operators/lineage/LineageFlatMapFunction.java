@@ -1,6 +1,5 @@
 package io.palyvos.provenance.l3stream.wrappers.operators.lineage;
 
-import io.palyvos.provenance.genealog.GenealogMapHelper;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.l3stream.wrappers.operators.utils.LineageCollectorAdapter;
 import org.apache.flink.api.common.functions.FlatMapFunction;

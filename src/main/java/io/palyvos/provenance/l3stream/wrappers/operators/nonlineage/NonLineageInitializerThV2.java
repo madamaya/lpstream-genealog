@@ -1,42 +1,38 @@
-package io.palyvos.provenance.l3stream.wrappers.operators.lineage;
+package io.palyvos.provenance.l3stream.wrappers.operators.nonlineage;
 
-import io.palyvos.provenance.genealog.GenealogTupleType;
 import io.palyvos.provenance.l3stream.conf.L3conf;
+import io.palyvos.provenance.l3stream.wrappers.objects.KafkaInputString;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.function.Function;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
-public class LineageInitializerTh extends RichMapFunction<ObjectNode, L3StreamTupleContainer<ObjectNode>> {
+public class NonLineageInitializerThV2 extends RichMapFunction<KafkaInputString, L3StreamTupleContainer<KafkaInputString>> {
   long start;
   long count;
   ExperimentSettings settings;
   int sourceID;
 
-  public <F extends Function<ObjectNode, Long> & Serializable> LineageInitializerTh(ExperimentSettings settings, int sourceID) {
+  public NonLineageInitializerThV2(ExperimentSettings settings, int sourceID) {
     this.settings = settings;
     this.sourceID = sourceID;
   }
 
   @Override
-  public L3StreamTupleContainer<ObjectNode> map(ObjectNode value) throws Exception {
-    L3StreamTupleContainer<ObjectNode> out = new L3StreamTupleContainer<>(value);
-    out.initGenealog(GenealogTupleType.SOURCE);
-    out.setLineageReliable(true);
+  public L3StreamTupleContainer<KafkaInputString> map(KafkaInputString value) throws Exception {
+    L3StreamTupleContainer<KafkaInputString> out = new L3StreamTupleContainer<>(value);
+    // out.initGenealog(GenealogTupleType.SOURCE);
     //out.setTimestamp(System.currentTimeMillis());
-    //out.setTimestamp(timestampFunction.apply(value));
-    out.setStimulus(System.nanoTime());
-    //out.setStimulus(stimulusFunction.apply(value));
-    out.setPartitionId(value.get("metadata").get("partition").asInt());
+    out.setDominantOpTime(value.getDominantOpTime());
+    out.setKafkaAppendTime(value.getKafkaAppandTime());
+    out.setStimulus(value.getStimulus());
+    // out.setStimulus(value.getKafkaAppandTime());
     count++;
     return out;
   }
@@ -57,7 +53,7 @@ public class LineageInitializerTh extends RichMapFunction<ObjectNode, L3StreamTu
       Files.createDirectories(Paths.get(dataPath));
     }
 
-    PrintWriter pw = new PrintWriter(dataPath + "/" + settings.getStartTime() + "_" + sourceID + "_" + getRuntimeContext().getIndexOfThisSubtask() + ".log");
+    PrintWriter pw = new PrintWriter(dataPath + "/" + settings.getStartTime() + "_" + sourceID + "_" + getRuntimeContext().getIndexOfThisSubtask() + "_" + settings.getDataSize() + ".log");
     pw.println(start + "," + end + "," + (end - start) + "," + count);
     pw.flush();
     pw.close();

@@ -1,0 +1,2 @@
+Operator wrappers (lineageMode and nonLineageMode) are based on original implementations.
+(src/main/java/io/palyvos/provenance/ananke/functions)

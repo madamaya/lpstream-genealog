@@ -1,4 +1,4 @@
-package io.palyvos.provenance.l3stream.wrappers.operators.lineage;
+package io.palyvos.provenance.l3stream.wrappers.operators.nonlineage;
 
 import io.palyvos.provenance.ananke.aggregate.ProvenanceAggregateStrategy;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
@@ -9,33 +9,39 @@ import java.util.function.Supplier;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
-public class LineageAggregateFunction<IN, ACC, OUT>
+public class NonLineageAggregateFunctionTs<IN, ACC, OUT>
     implements AggregateFunction<
         L3StreamTupleContainer<IN>, GenealogAccumulator<ACC>, L3StreamTupleContainer<OUT>> {
 
   private final AggregateFunction<IN, ACC, OUT> delegate;
   private final Supplier<ProvenanceAggregateStrategy> strategySupplier;
 
-  public LineageAggregateFunction(
+  public NonLineageAggregateFunctionTs(
       Supplier<ProvenanceAggregateStrategy> strategySupplier,
       AggregateFunction<IN, ACC, OUT> delegate) {
     this.delegate = delegate;
     this.strategySupplier = strategySupplier;
   }
 
+  /*
+   * CNFM: lineageReliableFlagについてメモ．
+   * CNFM: 今のやり方だと『Stateは作られたけど1レコードも到着しないうちにCheckpointだけ取られた』というケースでもlineageReliableFlagはFalseになる．
+   * CNFM: （実際の実行時にそのようなことがあるのかは不明）
+   * CNFM: これを避けるために，通常実行時もtrueで初期化して，addの中でレコードが処理されたらfalseに書き換えるというやり方がある．
+   * CNFM: ただしaddのたびにfalseの代入をすることになるから，性能に影響するかもしれないから初期の実装では今のやり方を採用．
+   */
   @Override
   public GenealogAccumulator<ACC> createAccumulator() {
-    return new GenealogAccumulator<>(strategySupplier.get(), delegate.createAccumulator(), true);
+    return new GenealogAccumulator<>(strategySupplier.get(), delegate.createAccumulator(), false);
   }
 
   @Override
   public GenealogAccumulator<ACC> add(
       L3StreamTupleContainer<IN> value, GenealogAccumulator<ACC> accumulator) {
-    accumulator.getStrategy().addWindowProvenance(value);
-    accumulator.updateLineageReliable(value.getLineageReliable());
+    // accumulator.strategy.addWindowProvenance(value);
+    accumulator.updateTimestamp(value.getTimestamp());
     accumulator.updateDominantOpTime(value.getDominantOpTime());
     accumulator.updateKafkaAppendTime(value.getKafkaAppendTime());
-    accumulator.updateTimestamp(value.getTimestamp());
     accumulator.updateStimulus(value.getStimulus());
     accumulator.setAccumulator(delegate.add(value.tuple(), accumulator.getAccumulator()));
     return accumulator;
@@ -45,10 +51,9 @@ public class LineageAggregateFunction<IN, ACC, OUT>
   public L3StreamTupleContainer<OUT> getResult(GenealogAccumulator<ACC> accumulator) {
     OUT result = delegate.getResult(accumulator.getAccumulator());
     L3StreamTupleContainer<OUT> genealogResult = new L3StreamTupleContainer<>(result);
-    accumulator.getStrategy().annotateWindowResult(genealogResult);
-    genealogResult.setLineageReliable(accumulator.isLineageReliable());
+    // accumulator.strategy.annotateWindowResult(genealogResult);
     genealogResult.setTimestamp(accumulator.getTimestamp());
-    genealogResult.setDominantOpTime(accumulator.getDominantOpTime());
+    genealogResult.setDominantOpTime(System.nanoTime() - accumulator.getDominantOpTime());
     genealogResult.setKafkaAppendTime(accumulator.getKafkaAppendTime());
     genealogResult.setStimulus(accumulator.getStimulus());
     return genealogResult;

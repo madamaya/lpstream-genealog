@@ -4,12 +4,13 @@ import io.palyvos.provenance.genealog.GenealogData;
 import io.palyvos.provenance.genealog.GenealogTuple;
 import io.palyvos.provenance.genealog.GenealogTupleType;
 
+/* Modifications copyright (C) 2024 Masaya Yamada */
 public class CountTupleGL extends CountTuple implements GenealogTuple {
 
   private GenealogData gdata;
 
-  public CountTupleGL(long timestamp, String key, long stimulus, long count) {
-    super(timestamp, key, stimulus, count);
+  public CountTupleGL(long timestamp, String key, long dominantOpTime, long kafkaAppendTime, long stimulus, long count) {
+    super(timestamp, key, dominantOpTime, kafkaAppendTime, stimulus, count);
   }
 
   @Override
