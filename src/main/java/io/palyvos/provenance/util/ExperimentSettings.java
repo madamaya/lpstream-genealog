@@ -492,7 +492,7 @@ public class ExperimentSettings implements Serializable {
   public OffsetsInitializer setOffsetsInitializer(String startingOffset) {
     if (startingOffset.equals("latest")) {
       return OffsetsInitializer.latest();
-    } else if (startingOffset.equals("ealiest")) {
+    } else if (startingOffset.equals("earliest")) {
       return OffsetsInitializer.earliest();
     } else {
       throw new IllegalArgumentException();
