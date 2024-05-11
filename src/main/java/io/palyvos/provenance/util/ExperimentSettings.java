@@ -17,10 +17,12 @@ import io.palyvos.provenance.l3stream.wrappers.operators.NonLineageModeStrategy;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
 
 import java.io.File;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -473,6 +475,27 @@ public class ExperimentSettings implements Serializable {
       return new NonLineageKafkaSinkV2();
     } else {
       return new LineageKafkaSinkV2();
+    }
+  }
+
+  @Parameter(names = "--startingOffset")
+  private String startingOffset = "latest";
+
+  public String getStartingOffset() {
+    return startingOffset;
+  }
+
+  public OffsetsInitializer setOffsetsInitializer() {
+    return this.setOffsetsInitializer(this.getStartingOffset());
+  }
+
+  public OffsetsInitializer setOffsetsInitializer(String startingOffset) {
+    if (startingOffset.equals("latest")) {
+      return OffsetsInitializer.latest();
+    } else if (startingOffset.equals("ealiest")) {
+      return OffsetsInitializer.earliest();
+    } else {
+      throw new IllegalArgumentException();
     }
   }
 }
