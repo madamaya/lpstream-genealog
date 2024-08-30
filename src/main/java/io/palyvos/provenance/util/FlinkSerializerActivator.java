@@ -75,28 +75,13 @@ public enum FlinkSerializerActivator {
                       settings.aggregateStrategySupplier().get(),
                       settings.statisticsFolder(),
                       settings.graphTraversalStatistics());
-
       env.addDefaultKryoSerializer(GenealogData.class, genealogDataSerializer);
-
-      final CustomGenericSerializer customGenericSerializer = new CustomGenericSerializer();
-
-      final KryoSerializer tupleContainerSerializer =
-              new KryoSerializer(genealogDataSerializer, customGenericSerializer);
-      env.addDefaultKryoSerializer(ProvenanceTupleContainer.class, tupleContainerSerializer);
-
-      env.addDefaultKryoSerializer(
-              HelperProvenanceGraphTuple.class,
-              new HelperProvenanceGraphTuple.KryoSerializer(customGenericSerializer));
 
       env.addDefaultKryoSerializer(
               UnsortedPointersAggregateStrategy.class,
               new UnsortedPointersAggregateStrategySerializer());
 
-      env.addDefaultKryoSerializer(
-              SortedPointersAggregateStrategy.class,
-              new SortedPointersAggregateStrategySerializer());
-
-      return new SerializerRegistry(customGenericSerializer, genealogDataSerializer);
+      return new SerializerRegistry(env, genealogDataSerializer);
     }
   };
 
