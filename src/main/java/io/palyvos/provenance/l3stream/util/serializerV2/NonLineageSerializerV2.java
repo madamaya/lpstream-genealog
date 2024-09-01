@@ -17,7 +17,8 @@ public class NonLineageSerializerV2<T> implements KafkaRecordSerializationSchema
     @Nullable
     @Override
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, KafkaSinkContext kafkaSinkContext, Long aLong) {
-        String ret = tuple.tuple() + "," + tuple.getTimestamp();
+        String latency = Long.toString(System.nanoTime() - tuple.getStimulus());
+        String ret = tuple.tuple() + "," + tuple.getTimestamp() + "," + latency;
         return new ProducerRecord<>(topic, ret.getBytes(StandardCharsets.UTF_8));
     }
 }
