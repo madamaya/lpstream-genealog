@@ -26,8 +26,8 @@ public class LineageSerializerLatRawV2<T> implements KafkaRecordSerializationSch
     public ProducerRecord<byte[], byte[]> serialize(L3StreamTupleContainer<T> tuple, KafkaSinkContext kafkaSinkContext, Long aLong) {
         long traversalStartTime = System.nanoTime();
         Set<TimestampedUIDTuple> lineage = (tuple.getLineageReliable()) ? genealogGraphTraverser.getProvenance(tuple) : null;
-        String lineageStr = (tuple.getLineageReliable()) ? FormatLineage.formattedLineage(lineage) : "";
         long traversalEndTime = System.nanoTime();
+        String lineageStr = (tuple.getLineageReliable()) ? FormatLineage.formattedLineage(lineage) : "";
 
         String traversalTime = Long.toString(traversalEndTime - traversalStartTime);
         return new ProducerRecord<>(topic, (tuple.getStimulus() + "," + tuple.getKafkaAppendTime() + "," + traversalTime + ", Lineage(" + lineage.size() + ")" + lineageStr + ", OUT:" + tuple.tuple()).getBytes(StandardCharsets.UTF_8));
