@@ -9,13 +9,13 @@ import org.apache.flink.configuration.Configuration;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
-public class LineageUpdateTsFunctionWM2<T>
+public class LineageExtractInputTs<T>
     extends RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> {
 
   private transient TimestampAssigner<T> tsAssigner;
   private final WatermarkStrategy<T> watermarkStrategy;
 
-  public LineageUpdateTsFunctionWM2(WatermarkStrategy<T> watermarkStrategy) {
+  public LineageExtractInputTs(WatermarkStrategy<T> watermarkStrategy) {
     this.watermarkStrategy = watermarkStrategy;
   }
 

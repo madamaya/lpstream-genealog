@@ -39,7 +39,7 @@ public class NonLineageAggregateFunction<IN, ACC, OUT>
   public GenealogAccumulator<ACC> add(
       L3StreamTupleContainer<IN> value, GenealogAccumulator<ACC> accumulator) {
     // accumulator.strategy.addWindowProvenance(value);
-    accumulator.updateTimestamp(value.getTimestamp());
+    // accumulator.updateTimestamp(value.getTimestamp());
     accumulator.updateDominantOpTime(value.getDominantOpTime());
     accumulator.updateKafkaAppendTime(value.getKafkaAppendTime());
     accumulator.updateStimulus(value.getStimulus());
@@ -52,7 +52,7 @@ public class NonLineageAggregateFunction<IN, ACC, OUT>
     OUT result = delegate.getResult(accumulator.getAccumulator());
     L3StreamTupleContainer<OUT> genealogResult = new L3StreamTupleContainer<>(result);
     // accumulator.strategy.annotateWindowResult(genealogResult);
-    genealogResult.setTimestamp(accumulator.getTimestamp());
+    // genealogResult.setTimestamp(accumulator.getTimestamp());
     genealogResult.setDominantOpTime(accumulator.getDominantOpTime());
     genealogResult.setKafkaAppendTime(accumulator.getKafkaAppendTime());
     genealogResult.setStimulus(accumulator.getStimulus());

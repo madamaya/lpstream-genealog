@@ -9,6 +9,7 @@ import io.palyvos.provenance.util.ExperimentSettings;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.*;
 import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.co.ProcessJoinFunction;
 
 import java.util.function.Supplier;
@@ -34,8 +35,13 @@ public class LineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
-    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> updateTsWM(WatermarkStrategy<T> watermarkStrategy, int sourceID) {
-        return new LineageUpdateTsFunctionWM2<>(watermarkStrategy);
+    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> extractInputTs(WatermarkStrategy<T> watermarkStrategy) {
+        return new LineageExtractInputTs<>(watermarkStrategy);
+    }
+
+    @Override
+    public <T> RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> assignChkTs(WatermarkStrategy<T> watermarkStrategy, int sourceID) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -115,5 +121,10 @@ public class LineageModeStrategy implements L3OpWrapperStrategy {
         } else {
             return new LineageWatermarkStrategy<>(delegate, numOfPartitions);
         }
+    }
+
+    @Override
+    public <T> ProcessFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> extractTs() {
+        return new LineageExtractTs<>();
     }
 }

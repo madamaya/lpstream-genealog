@@ -388,8 +388,10 @@ public class ExperimentSettings implements Serializable {
   public String getLineageMode() {
     if (l3OpWrapperStrategy.apply(null).getClass() == NonLineageModeStrategy.class) {
       return "NonLineageMode";
-    } else {
+    } else if (l3OpWrapperStrategy.apply(null).getClass() == LineageModeStrategy.class) {
       return "LineageMode";
+    } else {
+      throw new IllegalArgumentException();
     }
   }
 
@@ -399,7 +401,7 @@ public class ExperimentSettings implements Serializable {
     @Override
     public Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy> convert(
             String value) {
-      assert value == "Lineage" || value == "nonLineage";
+      assert value.equals("Lineage") || value.equals("nonLineage");
       switch (value) {
         case "Lineage":
           return (Function<Supplier<ProvenanceAggregateStrategy>, L3OpWrapperStrategy>)
@@ -463,18 +465,22 @@ public class ExperimentSettings implements Serializable {
   }
 
   public String getOutputTopicName(String name) {
-    if (this.getLineageMode() == "NonLineageMode") {
+    if (this.getLineageMode().equals("NonLineageMode")) {
       return name;
-    } else {
+    } else if (this.getLineageMode().equals("LineageMode")) {
       return getLineageTopic();
+    } else {
+      throw new IllegalArgumentException();
     }
   }
 
   public KafkaSinkStrategyV2 getKafkaSink() {
-    if (this.getLineageMode() == "NonLineageMode") {
+    if (this.getLineageMode().equals("NonLineageMode")) {
       return new NonLineageKafkaSinkV2();
-    } else {
+    } else if (this.getLineageMode().equals("LineageMode")) {
       return new LineageKafkaSinkV2();
+    } else {
+      throw new IllegalArgumentException();
     }
   }
 

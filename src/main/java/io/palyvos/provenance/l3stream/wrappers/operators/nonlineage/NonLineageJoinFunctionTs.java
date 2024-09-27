@@ -21,7 +21,7 @@ public class NonLineageJoinFunctionTs<IN1, IN2, OUT>
     OUT result = delegate.join(first.tuple(), second.tuple());
     L3StreamTupleContainer<OUT> genealogResult = new L3StreamTupleContainer<>(result);
     // GenealogJoinHelper.INSTANCE.annotateResult(first, second, genealogResult);
-    genealogResult.copyTimes(first, second);
+    genealogResult.copyTimesWithoutTs(first, second);
     genealogResult.setDominantOpTime(System.nanoTime() - genealogResult.getDominantOpTime());
     return genealogResult;
   }

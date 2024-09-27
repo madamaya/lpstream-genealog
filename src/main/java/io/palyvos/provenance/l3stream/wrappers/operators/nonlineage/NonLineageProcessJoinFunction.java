@@ -52,7 +52,7 @@ public class NonLineageProcessJoinFunction<IN1, IN2, OUT> extends
     public void collect(O record) {
       L3StreamTupleContainer<O> genealogResult = new L3StreamTupleContainer<>(record);
       // GenealogJoinHelper.INSTANCE.annotateResult(left, right, genealogResult);
-      genealogResult.copyTimes(left, right);
+      genealogResult.copyTimesWithoutTs(left, right);
       delegate.collect(genealogResult);
     }
 

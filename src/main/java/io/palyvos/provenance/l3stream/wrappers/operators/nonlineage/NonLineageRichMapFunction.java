@@ -26,7 +26,7 @@ public class NonLineageRichMapFunction<T, O>
     O result = delegate.map(value.tuple());
     L3StreamTupleContainer<O> genealogResult = new L3StreamTupleContainer<>(result);
     // GenealogMapHelper.INSTANCE.annotateResult(value, genealogResult);
-    genealogResult.copyTimes(value);
+    genealogResult.copyTimesWithoutTs(value);
     return genealogResult;
   }
 

@@ -9,8 +9,7 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
     private GenealogData genealogData;
     private long partitionId;
     private long timestamp;
-    private boolean lineageReliable;
-    private long checkpointId;
+    private boolean lineageReliable = false;
     private long dominantOpTime = Long.MAX_VALUE;
     private long kafkaAppendTime = Long.MAX_VALUE;
     private long latencyTs = Long.MAX_VALUE;
@@ -18,19 +17,7 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
 
     public L3StreamTupleContainer(T tuple) {
         this.tuple = tuple;
-        this.lineageReliable = true;
-    }
-
-    public L3StreamTupleContainer(L3StreamTupleContainer<T> tuple) {
-        this(tuple.tuple());
-        this.genealogData = tuple.getGenealogData();
-        this.partitionId = tuple.getPartitionId();
-        this.timestamp = tuple.getTimestamp();
-        this.lineageReliable = tuple.getLineageReliable();
-        this.checkpointId = tuple.getCheckpointId();
-        this.dominantOpTime = tuple.getDominantOpTime();
-        this.kafkaAppendTime = tuple.getKafkaAppendTime();
-        this.latencyTs = tuple.getStimulus();
+        // this.lineageReliable = true;
     }
 
     public T tuple() {
@@ -44,8 +31,22 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
         this.latencyTs = value.getStimulus();
     }
 
+    public void copyTimesWithoutTs(L3StreamTupleContainer value) {
+        //this.timestamp = value.getTimestamp();
+        this.dominantOpTime = value.getDominantOpTime();
+        this.kafkaAppendTime = value.getKafkaAppendTime();
+        this.latencyTs = value.getStimulus();
+    }
+
     public void copyTimes(L3StreamTupleContainer value1, L3StreamTupleContainer value2) {
         this.timestamp = Math.max(value1.getTimestamp(), value2.getTimestamp());
+        this.dominantOpTime = Math.max(value1.getDominantOpTime(), value2.getDominantOpTime());
+        this.kafkaAppendTime = Math.max(value1.getKafkaAppendTime(), value2.getKafkaAppendTime());
+        this.latencyTs = Math.max(value1.getStimulus(), value2.getStimulus());
+    }
+
+    public void copyTimesWithoutTs(L3StreamTupleContainer value1, L3StreamTupleContainer value2) {
+        //this.timestamp = Math.max(value1.getTimestamp(), value2.getTimestamp());
         this.dominantOpTime = Math.max(value1.getDominantOpTime(), value2.getDominantOpTime());
         this.kafkaAppendTime = Math.max(value1.getKafkaAppendTime(), value2.getKafkaAppendTime());
         this.latencyTs = Math.max(value1.getStimulus(), value2.getStimulus());
@@ -80,16 +81,6 @@ public class L3StreamTupleContainer<T> implements L3StreamTuple {
     @Override
     public void setLineageReliable(boolean lineageReliable) {
         this.lineageReliable = lineageReliable;
-    }
-
-    @Override
-    public long getCheckpointId() {
-        return checkpointId;
-    }
-
-    @Override
-    public void setCheckpointId(long checkpointId) {
-        this.checkpointId = checkpointId;
     }
 
     @Override

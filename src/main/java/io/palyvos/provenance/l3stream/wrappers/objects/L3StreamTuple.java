@@ -11,8 +11,4 @@ public interface L3StreamTuple extends GenealogTuple {
     boolean getLineageReliable();
 
     void setLineageReliable(boolean lineageReliable);
-
-    long getCheckpointId();
-
-    void setCheckpointId(long checkpointId);
 }

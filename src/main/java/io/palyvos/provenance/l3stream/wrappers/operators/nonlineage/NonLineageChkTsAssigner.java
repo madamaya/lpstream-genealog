@@ -12,7 +12,7 @@ import redis.clients.jedis.JedisPool;
 
 /* Modifications copyright (C) 2023 Masaya Yamada */
 
-public class NonLineageUpdateTsFunctionWM2<T>
+public class NonLineageChkTsAssigner<T>
     extends RichMapFunction<L3StreamTupleContainer<T>, L3StreamTupleContainer<T>> implements CheckpointListener {
 
   private String redisIP = L3conf.REDIS_IP;
@@ -24,7 +24,7 @@ public class NonLineageUpdateTsFunctionWM2<T>
   private final WatermarkStrategy<T> watermarkStrategy;
   private long latestTs = -1;
 
-  public NonLineageUpdateTsFunctionWM2(WatermarkStrategy<T> watermarkStrategy, int sourceID) {
+  public NonLineageChkTsAssigner(WatermarkStrategy<T> watermarkStrategy, int sourceID) {
     this.watermarkStrategy = watermarkStrategy;
     this.sourceID = sourceID;
   }
@@ -42,13 +42,17 @@ public class NonLineageUpdateTsFunctionWM2<T>
   }
 
   @Override
-  public L3StreamTupleContainer<T> map(L3StreamTupleContainer<T> value) throws Exception {
-    L3StreamTupleContainer<T> genealogResult = new L3StreamTupleContainer<>(value);
-    genealogResult.copyTimes(value);
+  public void close() throws Exception {
+    super.close();
+  }
 
-    long currentTs = tsAssigner.extractTimestamp(value.tuple(), -1);
-    genealogResult.setTimestamp(currentTs);
-    latestTs = currentTs;
+  @Override
+  public L3StreamTupleContainer<T> map(L3StreamTupleContainer<T> value) throws Exception {
+    L3StreamTupleContainer<T> genealogResult = new L3StreamTupleContainer<>(value.tuple());
+    genealogResult.copyTimesWithoutTs(value);
+    latestTs = tsAssigner.extractTimestamp(value.tuple(), -1);
+    // genealogResult.setTimestamp(currentTs);
+    // latestTs = currentTs;
 
     return genealogResult;
   }
