@@ -2,6 +2,7 @@ package io.palyvos.provenance.l3stream.util;
 
 import io.palyvos.provenance.l3stream.util.serializerV2.LineageSerializerLatV2;
 import io.palyvos.provenance.l3stream.util.serializerV2.LineageSerializerLinV2;
+import io.palyvos.provenance.l3stream.util.serializerV2.LineageSerializerOutV2;
 import io.palyvos.provenance.l3stream.util.serializerV2.LineageSerializerV2;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
@@ -37,6 +38,13 @@ public class LineageKafkaSinkV2 implements KafkaSinkStrategyV2 {
                     .setBootstrapServers(broker)
                     .setKafkaProducerConfig(props)
                     .setRecordSerializer(new LineageSerializerLinV2<>(topic, settings))
+                    .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
+                    .build();
+        }  else if (settings.getLatencyFlag() == 100) {
+            return KafkaSink.<L3StreamTupleContainer<T>>builder()
+                    .setBootstrapServers(broker)
+                    .setKafkaProducerConfig(props)
+                    .setRecordSerializer(new LineageSerializerOutV2<>(topic, settings))
                     .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
         } else {

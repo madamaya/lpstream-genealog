@@ -1,6 +1,7 @@
 package io.palyvos.provenance.l3stream.util;
 
 import io.palyvos.provenance.l3stream.util.serializerV2.NonLineageSerializerLatV2;
+import io.palyvos.provenance.l3stream.util.serializerV2.NonLineageSerializerOutV2;
 import io.palyvos.provenance.l3stream.util.serializerV2.NonLineageSerializerV2;
 import io.palyvos.provenance.l3stream.wrappers.objects.L3StreamTupleContainer;
 import io.palyvos.provenance.util.ExperimentSettings;
@@ -24,7 +25,6 @@ public class NonLineageKafkaSinkV2 implements KafkaSinkStrategyV2 {
                     .setRecordSerializer(new NonLineageSerializerLatV2<>(topic))
                     .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
-            //return new FlinkKafkaProducer<>(topic, new NonLineageSerializerLatV2<>(topic), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
         } else if (settings.getLatencyFlag() == 1) {
             return KafkaSink.<L3StreamTupleContainer<T>>builder()
                     .setBootstrapServers(broker)
@@ -32,7 +32,13 @@ public class NonLineageKafkaSinkV2 implements KafkaSinkStrategyV2 {
                     .setRecordSerializer(new NonLineageSerializerV2<>(topic))
                     .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                     .build();
-            // return new FlinkKafkaProducer<>(topic, new NonLineageSerializerV2<>(topic), prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
+        } else if (settings.getLatencyFlag() == 100) {
+            return KafkaSink.<L3StreamTupleContainer<T>>builder()
+                    .setBootstrapServers(broker)
+                    .setKafkaProducerConfig(props)
+                    .setRecordSerializer(new NonLineageSerializerOutV2<>(topic))
+                    .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
+                    .build();
         } else {
             throw new IllegalArgumentException("NonLineageKafkaSink");
         }
