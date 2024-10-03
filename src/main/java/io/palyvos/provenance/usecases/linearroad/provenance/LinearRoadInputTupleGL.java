@@ -18,8 +18,8 @@ public class LinearRoadInputTupleGL extends
   }
 
   public LinearRoadInputTupleGL(int type, long time, int vid, int speed, int xway, int lane,
-      int dir, int seg, int pos, long dominantOpTime, long kafkaAppendTime, long stimulus) {
-    super(type, time, vid, speed, xway, lane, dir, seg, pos, dominantOpTime, kafkaAppendTime, stimulus);
+      int dir, int seg, int pos, String log, long dominantOpTime, long kafkaAppendTime, long stimulus) {
+    super(type, time, vid, speed, xway, lane, dir, seg, pos, log, dominantOpTime, kafkaAppendTime, stimulus);
   }
 
   public LinearRoadInputTupleGL(LinearRoadInputTupleGL tuple) {

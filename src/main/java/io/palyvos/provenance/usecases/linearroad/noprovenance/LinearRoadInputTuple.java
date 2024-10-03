@@ -17,6 +17,7 @@ public class LinearRoadInputTuple extends BaseTuple {
   private int dir;
   private int seg;
   private int pos;
+  private String log;
 
   public static LinearRoadInputTuple fromReading(String reading) {
     try {
@@ -33,7 +34,7 @@ public class LinearRoadInputTuple extends BaseTuple {
   }
 
   public LinearRoadInputTuple(int type, long time, int vid, int speed,
-      int xway, int lane, int dir, int seg, int pos, long dominantOpTime, long kafkaAppendTime, long stimulus) {
+      int xway, int lane, int dir, int seg, int pos, String log, long dominantOpTime, long kafkaAppendTime, long stimulus) {
     super(time, String.valueOf(vid), dominantOpTime, kafkaAppendTime, stimulus);
     this.type = type;
     this.vid = vid;
@@ -43,10 +44,11 @@ public class LinearRoadInputTuple extends BaseTuple {
     this.dir = dir;
     this.seg = seg;
     this.pos = pos;
+    this.log = log;
   }
 
   public LinearRoadInputTuple(int type, long time, int vid, int speed,
-                                 int xway, int lane, int dir, int seg, int pos) {
+                                 int xway, int lane, int dir, int seg, int pos, String log) {
     super(time, String.valueOf(vid));
     this.type = type;
     this.vid = vid;
@@ -56,6 +58,7 @@ public class LinearRoadInputTuple extends BaseTuple {
     this.dir = dir;
     this.seg = seg;
     this.pos = pos;
+    this.log = log;
   }
 
   public LinearRoadInputTuple(LinearRoadInputTuple tuple) {
@@ -68,6 +71,7 @@ public class LinearRoadInputTuple extends BaseTuple {
     this.dir = tuple.getDir();
     this.seg = tuple.getSeg();
     this.pos = tuple.getPos();
+    this.log = tuple.getLog();
   }
 
   public int getType() {
@@ -134,6 +138,14 @@ public class LinearRoadInputTuple extends BaseTuple {
     this.pos = pos;
   }
 
+  public String getLog() {
+    return log;
+  }
+
+  public void setLog(String log) {
+    this.log = log;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -153,17 +165,18 @@ public class LinearRoadInputTuple extends BaseTuple {
         lane == that.lane &&
         dir == that.dir &&
         seg == that.seg &&
-        pos == that.pos;
+        pos == that.pos &&
+        Objects.equals(log, that.log);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), type, vid, speed, xway, lane, dir, seg, pos);
+    return Objects.hash(super.hashCode(), type, vid, speed, xway, lane, dir, seg, pos, log);
   }
 
   @Override
   public String toString() {
     return type + "," + getTimestamp() + "," + vid + "," + speed + ","
-        + xway + "," + lane + "," + dir + "," + seg + "," + pos + "," + getKey();
+        + xway + "," + lane + "," + dir + "," + seg + "," + pos + "," + log + "," + getKey();
   }
 }
