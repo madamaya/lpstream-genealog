@@ -49,6 +49,11 @@ public class NonLineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
+    public <T> RichFilterFunction<L3StreamTupleContainer<T>> filter(RichFilterFunction<T> delegate) {
+        return new NonLineageRichFilterFunction<>(delegate);
+    }
+
+    @Override
     public <T, KEY> KeySelector<L3StreamTupleContainer<T>, KEY> keyBy(KeySelector<T, KEY> delegate) {
         return new NonLineageKeySelector<>(delegate);
     }

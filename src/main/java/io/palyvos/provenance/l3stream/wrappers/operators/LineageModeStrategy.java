@@ -50,6 +50,11 @@ public class LineageModeStrategy implements L3OpWrapperStrategy {
     }
 
     @Override
+    public <T> RichFilterFunction<L3StreamTupleContainer<T>> filter(RichFilterFunction<T> delegate) {
+        return new LineageRichFilterFunction<>(delegate);
+    }
+
+    @Override
     public <T, KEY> KeySelector<L3StreamTupleContainer<T>, KEY> keyBy(KeySelector<T, KEY> delegate) {
         return new LineageKeySelector<>(delegate);
     }

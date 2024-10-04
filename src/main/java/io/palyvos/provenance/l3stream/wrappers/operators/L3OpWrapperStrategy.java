@@ -22,6 +22,8 @@ public interface L3OpWrapperStrategy {
 
     public <T> FilterFunction<L3StreamTupleContainer<T>> filter(FilterFunction<T> delegate);
 
+    public <T> RichFilterFunction<L3StreamTupleContainer<T>> filter(RichFilterFunction<T> delegate);
+
     public <T, KEY> KeySelector<L3StreamTupleContainer<T>, KEY> keyBy(KeySelector<T, KEY> delegate);
 
     public <T, KEY> KeySelector<L3StreamTupleContainer<T>, KEY> keyBy(KeySelector<T, KEY> delegate, Class<KEY> clazz);
