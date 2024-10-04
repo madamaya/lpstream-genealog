@@ -18,6 +18,7 @@ public class LineageRichMapFunction<T, O>
 
   @Override
   public void open(Configuration parameters) throws Exception {
+    super.open(parameters);
     delegate.setRuntimeContext(getRuntimeContext());
     delegate.open(parameters);
   }
@@ -35,6 +36,7 @@ public class LineageRichMapFunction<T, O>
 
   @Override
   public void close() throws Exception {
+    super.close();
     delegate.close();
   }
 }

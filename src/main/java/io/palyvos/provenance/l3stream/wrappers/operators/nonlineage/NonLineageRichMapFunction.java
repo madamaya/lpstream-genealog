@@ -17,8 +17,9 @@ public class NonLineageRichMapFunction<T, O>
 
   @Override
   public void open(Configuration parameters) throws Exception {
-    this.delegate.setRuntimeContext(getRuntimeContext());
-    this.delegate.open(parameters);
+    super.open(parameters);
+    delegate.setRuntimeContext(getRuntimeContext());
+    delegate.open(parameters);
   }
 
   @Override
@@ -32,6 +33,7 @@ public class NonLineageRichMapFunction<T, O>
 
   @Override
   public void close() throws Exception {
-    this.delegate.close();
+    super.close();
+    delegate.close();
   }
 }
